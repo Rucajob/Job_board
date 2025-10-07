@@ -78,19 +78,19 @@ app.get("/users/:id", async (req, res) => {
 });
 
 app.post("/users", async (req, res) => {
-  const { name, email, phone, password_hash, role } = req.body;
+  const { full_name, email, password, role } = req.body;
   const [result] = await pool.query(
-    "INSERT INTO users (name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?)",
-    [name, email, phone, password_hash, role || "user"]
+    "INSERT INTO users (full_name, email, password, role) VALUES (?, ?, ?, ?)",
+    [full_name, email, password, role || "applicant"]
   );
-  res.status(201).json({ id: result.insertId, name, email, phone, role });
+  res.status(201).json({ id: result.insertId, full_name, email, role });
 });
 
 app.put("/users/:id", async (req, res) => {
-  const { name, email, phone, password_hash, role } = req.body;
+  const { full_name, email, password, role, status } = req.body;
   await pool.query(
-    "UPDATE users SET name=?, email=?, phone=?, password_hash=?, role=? WHERE id=?",
-    [name, email, phone, password_hash, role, req.params.id]
+    "UPDATE users SET full_name=?, email=?, password=?, role=?, status=? WHERE id=?",
+    [full_name, email, password, role, status || "active", req.params.id]
   );
   res.json({ message: "User updated" });
 });

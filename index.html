@@ -28,7 +28,7 @@
     <!-- ===== APPLICATIONS CRUD ===== -->
     <h2>Applications</h2>
 
-    <button onclick="loadApplication(1)">Load Application 1</button>
+    <button onclick="loadApplication(14)">Load Application 1</button>
     <div id="applicationDetails"></div>
 
     <button onclick="createApplication()">Create Application</button>
@@ -43,7 +43,7 @@
     <!-- ===== USERS CRUD ===== -->
     <h2>Users</h2>
 
-    <button onclick="loadUser(1)">Load User 1</button>
+    <button onclick="loadUser(2)">Load User 1</button>
     <div id="userDetails"></div>
 
     <button onclick="createUser()">Create User</button>
@@ -127,22 +127,32 @@
             fetch(`http://localhost:3000/applications/${id}`)
                 .then(res => res.json())
                 .then(app => {
+                    if (app.message === "Application not found") {
+                        document.getElementById('applicationDetails').innerHTML = `<p style="color:red;">Application ${id} not found</p>`;
+                        return;
+                    }
+
                     document.getElementById('applicationDetails').innerHTML = `
-                        <p>Job ID: ${app.job_id}</p>
-                        <p>User ID: ${app.user_id}</p>
-                        <p>Message: ${app.message}</p>
-                        <p>Status: ${app.status}</p>
-                    `;
+                <p>Job ID: ${app.job_id}</p>
+                <p>User ID: ${app.user_id}</p>
+                <p>Message: ${app.message}</p>
+                <p>Status: ${app.status}</p>
+            `;
+                })
+                .catch(err => {
+                    document.getElementById('applicationDetails').innerHTML = `<p style="color:red;">Error loading application</p>`;
+                    console.error(err);
                 });
         }
+
 
         function createApplication() {
             fetch('http://localhost:3000/applications', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    job_id: 1,
-                    user_id: 1,
+                    job_id: 9,
+                    user_id: 2,
                     message: "Excited to apply for this job!"
                 })
             }).then(res => res.json())
