@@ -12,47 +12,44 @@
 
     <!-- ===== JOBS CRUD ===== -->
     <h2>Jobs</h2>
-
-    <button onclick="loadJob(9)">Load Job 1</button>
+    <button onclick="loadJob(9)">Load Job</button>
     <div id="jobDetails"></div>
 
     <button onclick="createJob()">Create Job</button>
     <div id="postResult"></div>
 
-    <button onclick="updateJob(1)">Update Job 1</button>
+    <button onclick="updateJob()">Update Last Created Job</button>
     <div id="putResult"></div>
 
-    <button onclick="deleteJob(1)">Delete Job 1</button>
+    <button onclick="deleteJob()">Delete Last Created Job</button>
     <div id="deleteResult"></div>
 
     <!-- ===== APPLICATIONS CRUD ===== -->
     <h2>Applications</h2>
-
-    <button onclick="loadApplication(14)">Load Application 1</button>
+    <button onclick="loadApplication(14)">Load Application</button>
     <div id="applicationDetails"></div>
 
     <button onclick="createApplication()">Create Application</button>
     <div id="applicationPostResult"></div>
 
-    <button onclick="updateApplication(1)">Update Application 1</button>
+    <button onclick="updateApplication()">Update Last Created Application</button>
     <div id="applicationPutResult"></div>
 
-    <button onclick="deleteApplication(1)">Delete Application 1</button>
+    <button onclick="deleteApplication()">Delete Last Created Application</button>
     <div id="applicationDeleteResult"></div>
 
     <!-- ===== USERS CRUD ===== -->
     <h2>Users</h2>
-
-    <button onclick="loadUser(2)">Load User 1</button>
+    <button onclick="loadUser(2)">Load User</button>
     <div id="userDetails"></div>
 
     <button onclick="createUser()">Create User</button>
     <div id="userPostResult"></div>
 
-    <button onclick="updateUser(1)">Update User 1</button>
+    <button onclick="updateUser()">Update Last Created User</button>
     <div id="userPutResult"></div>
 
-    <button onclick="deleteUser(1)">Delete User 1</button>
+    <button onclick="deleteUser()">Delete Last Created User</button>
     <div id="userDeleteResult"></div>
 
     <script>
@@ -127,7 +124,7 @@
 
         function deleteJob() {
             if (!lastCreatedJobId) {
-                alert("⚠️ No job to delete. Create one first!");
+                alert("⚠️ No job to delete!");
                 return;
             }
             fetch(`http://localhost:3000/jobs/${lastCreatedJobId}`, { method: 'DELETE' })
@@ -139,7 +136,6 @@
         }
 
         // =================== APPLICATIONS ===================
-
         function loadApplication(appId) {
             fetch(`http://localhost:3000/applications/${appId}`)
                 .then(res => res.json())
@@ -149,12 +145,12 @@
                         return;
                     }
                     document.getElementById('applicationDetails').innerHTML = `
-                    <p><strong>ID:</strong> ${app.id}</p>
-                    <p><strong>Job ID:</strong> ${app.job_id}</p>
-                    <p><strong>User ID:</strong> ${app.user_id}</p>
-                    <p><strong>Message:</strong> ${app.message}</p>
-                    <p><strong>Status:</strong> ${app.status || "pending"}</p>
-                `;
+                        <p><strong>ID:</strong> ${app.id}</p>
+                        <p><strong>Job ID:</strong> ${app.job_id}</p>
+                        <p><strong>User ID:</strong> ${app.user_id}</p>
+                        <p><strong>Message:</strong> ${app.message}</p>
+                        <p><strong>Status:</strong> ${app.status || "pending"}</p>
+                    `;
                 })
                 .catch(err => console.error(err));
         }
@@ -164,8 +160,8 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    job_id: 9, // un job existant
-                    user_id: 2, // un utilisateur existant
+                    job_id: 9,
+                    user_id: 2,
                     message: "Excited to apply!"
                 })
             })
@@ -203,14 +199,12 @@
             fetch(`http://localhost:3000/applications/${lastCreatedApplicationId}`, { method: 'DELETE' })
                 .then(res => res.json())
                 .then(data => {
-                    console.log("DELETE response:", data);
                     document.getElementById('applicationDeleteResult').innerText = data.message;
                     lastCreatedApplicationId = null;
                 });
         }
 
         // =================== USERS ===================
-
         function loadUser(userId) {
             fetch(`http://localhost:3000/users/${userId}`)
                 .then(res => res.json())
@@ -220,12 +214,12 @@
                         return;
                     }
                     document.getElementById('userDetails').innerHTML = `
-                    <p><strong>ID:</strong> ${user.id}</p>
-                    <p><strong>Name:</strong> ${user.full_name}</p>
-                    <p><strong>Email:</strong> ${user.email}</p>
-                    <p><strong>Role:</strong> ${user.role}</p>
-                    <p><strong>Status:</strong> ${user.status || "active"}</p>
-                `;
+                        <p><strong>ID:</strong> ${user.id}</p>
+                        <p><strong>Name:</strong> ${user.full_name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Role:</strong> ${user.role}</p>
+                        <p><strong>Status:</strong> ${user.status || "active"}</p>
+                    `;
                 })
                 .catch(err => console.error(err));
         }
