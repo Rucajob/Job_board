@@ -79,11 +79,19 @@ app.get("/users/:id", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   const { full_name, email, password, role } = req.body;
-  const [result] = await pool.query(
-    "INSERT INTO users (full_name, email, password, role) VALUES (?, ?, ?, ?)",
-    [full_name, email, password, role || "applicant"]
-  );
-  res.status(201).json({ id: result.insertId, full_name, email, role });
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO users (full_name, email, password, role) VALUES (?, ?, ?, ?)",
+      [full_name, email, password, role || "applicant"]
+    );
+    res.status(201).json({ id: result.insertId, full_name, email, role });
+  } catch (err) {
+    if (err.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
 app.put("/users/:id", async (req, res) => {
@@ -96,7 +104,10 @@ app.put("/users/:id", async (req, res) => {
 });
 
 app.delete("/users/:id", async (req, res) => {
-  await pool.query("DELETE FROM users WHERE id=?", [req.params.id]);
+  const [result] = await pool.query("DELETE FROM users WHERE id=?", [req.params.id]);
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ message: "User not found" });
+  }
   res.json({ message: "User deleted" });
 });
 
@@ -192,7 +203,10 @@ app.put("/applications/:id", async (req, res) => {
 });
 
 app.delete("/applications/:id", async (req, res) => {
-  await pool.query("DELETE FROM applications WHERE id=?", [req.params.id]);
+  const [result] = await pool.query("DELETE FROM applications WHERE id=?", [req.params.id]);
+  if (result.affectedRows === 0) {
+    return res.status(404).json({ message: "Application not found" });
+  }
   res.json({ message: "Application deleted" });
 });
 

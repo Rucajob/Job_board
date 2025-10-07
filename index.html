@@ -56,6 +56,11 @@
     <div id="userDeleteResult"></div>
 
     <script>
+        // Variables globales pour suivre les derniers IDs créés
+        let lastCreatedJobId = null;
+        let lastCreatedApplicationId = null;
+        let lastCreatedUserId = null;
+
         // =================== JOBS ===================
         function loadJob(jobId) {
             fetch(`http://localhost:3000/jobs/${jobId}`)
@@ -65,22 +70,17 @@
                         document.getElementById('jobDetails').innerHTML = `<p style="color:red;">Job ${jobId} not found</p>`;
                         return;
                     }
-
                     document.getElementById('jobDetails').innerHTML = `
-                <h3>${job.title}</h3>
-                <p>${job.full_description}</p>
-                <p>Salary: ${job.salary}</p>
-                <p>Location: ${job.location}</p>
-                <p>Working hours: ${job.working_hours}</p>
-                <p>Company: ${job.company_name}</p>
-            `;
+                        <h3>${job.title}</h3>
+                        <p>${job.full_description}</p>
+                        <p>Salary: ${job.salary}</p>
+                        <p>Location: ${job.location}</p>
+                        <p>Working hours: ${job.working_hours}</p>
+                        <p>Company: ${job.company_name}</p>
+                    `;
                 })
-                .catch(err => {
-                    document.getElementById('jobDetails').innerHTML = `<p style="color:red;">Error loading job</p>`;
-                    console.error(err);
-                });
+                .catch(err => console.error(err));
         }
-
 
         function createJob() {
             fetch('http://localhost:3000/jobs', {
@@ -88,19 +88,27 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     company_id: 1,
-                    title: "Backend Developer",
+                    title: "Backend Developer " + Math.floor(Math.random() * 100),
                     short_description: "Work on server-side code",
                     full_description: "Node.js, Express, SQL",
                     salary: "$60k-$80k",
                     location: "Remote",
                     working_hours: "Full-time"
                 })
-            }).then(res => res.json())
-                .then(data => document.getElementById('postResult').innerText = `Job created with ID: ${data.id}`);
+            })
+                .then(res => res.json())
+                .then(data => {
+                    lastCreatedJobId = data.id;
+                    document.getElementById('postResult').innerText = `✅ Job created with ID: ${data.id}`;
+                });
         }
 
-        function updateJob(jobId) {
-            fetch(`http://localhost:3000/jobs/${jobId}`, {
+        function updateJob() {
+            if (!lastCreatedJobId) {
+                alert("⚠️ Create a job first!");
+                return;
+            }
+            fetch(`http://localhost:3000/jobs/${lastCreatedJobId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -112,85 +120,114 @@
                     location: "New York, NY",
                     working_hours: "Full-time"
                 })
-            }).then(res => res.json())
+            })
+                .then(res => res.json())
                 .then(data => document.getElementById('putResult').innerText = data.message);
         }
 
-        function deleteJob(jobId) {
-            fetch(`http://localhost:3000/jobs/${jobId}`, { method: 'DELETE' })
+        function deleteJob() {
+            if (!lastCreatedJobId) {
+                alert("⚠️ No job to delete. Create one first!");
+                return;
+            }
+            fetch(`http://localhost:3000/jobs/${lastCreatedJobId}`, { method: 'DELETE' })
                 .then(res => res.json())
-                .then(data => document.getElementById('deleteResult').innerText = data.message);
-        }
-
-        // =================== APPLICATIONS ===================
-        function loadApplication(id) {
-            fetch(`http://localhost:3000/applications/${id}`)
-                .then(res => res.json())
-                .then(app => {
-                    if (app.message === "Application not found") {
-                        document.getElementById('applicationDetails').innerHTML = `<p style="color:red;">Application ${id} not found</p>`;
-                        return;
-                    }
-
-                    document.getElementById('applicationDetails').innerHTML = `
-                <p>Job ID: ${app.job_id}</p>
-                <p>User ID: ${app.user_id}</p>
-                <p>Message: ${app.message}</p>
-                <p>Status: ${app.status}</p>
-            `;
-                })
-                .catch(err => {
-                    document.getElementById('applicationDetails').innerHTML = `<p style="color:red;">Error loading application</p>`;
-                    console.error(err);
+                .then(data => {
+                    document.getElementById('deleteResult').innerText = data.message;
+                    lastCreatedJobId = null;
                 });
         }
 
+        // =================== APPLICATIONS ===================
+
+        function loadApplication(appId) {
+            fetch(`http://localhost:3000/applications/${appId}`)
+                .then(res => res.json())
+                .then(app => {
+                    if (app.message === "Application not found") {
+                        document.getElementById('applicationDetails').innerHTML = `<p style="color:red;">Application ${appId} not found</p>`;
+                        return;
+                    }
+                    document.getElementById('applicationDetails').innerHTML = `
+                    <p><strong>ID:</strong> ${app.id}</p>
+                    <p><strong>Job ID:</strong> ${app.job_id}</p>
+                    <p><strong>User ID:</strong> ${app.user_id}</p>
+                    <p><strong>Message:</strong> ${app.message}</p>
+                    <p><strong>Status:</strong> ${app.status || "pending"}</p>
+                `;
+                })
+                .catch(err => console.error(err));
+        }
 
         function createApplication() {
             fetch('http://localhost:3000/applications', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    job_id: 15,
-                    user_id: 2,
-                    message: "Excited to apply for this job!"
+                    job_id: 9, // un job existant
+                    user_id: 2, // un utilisateur existant
+                    message: "Excited to apply!"
                 })
-            }).then(res => res.json())
-                .then(data => document.getElementById('applicationPostResult').innerText = `Application created with ID: ${data.id}`);
+            })
+                .then(res => res.json())
+                .then(data => {
+                    lastCreatedApplicationId = data.id;
+                    document.getElementById('applicationPostResult').innerText = `✅ Application created with ID: ${data.id}`;
+                });
         }
 
-        function updateApplication(id) {
-            fetch(`http://localhost:3000/applications/${id}`, {
+        function updateApplication() {
+            if (!lastCreatedApplicationId) {
+                alert("⚠️ Create an application first!");
+                return;
+            }
+            fetch(`http://localhost:3000/applications/${lastCreatedApplicationId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    job_id: 1,
-                    user_id: 1,
+                    job_id: 9,
+                    user_id: 2,
                     message: "Updated message",
                     status: "reviewed"
                 })
-            }).then(res => res.json())
+            })
+                .then(res => res.json())
                 .then(data => document.getElementById('applicationPutResult').innerText = data.message);
         }
 
-        function deleteApplication(id) {
-            fetch(`http://localhost:3000/applications/${id}`, { method: 'DELETE' })
+        function deleteApplication() {
+            if (!lastCreatedApplicationId) {
+                alert("⚠️ No application to delete!");
+                return;
+            }
+            fetch(`http://localhost:3000/applications/${lastCreatedApplicationId}`, { method: 'DELETE' })
                 .then(res => res.json())
-                .then(data => document.getElementById('applicationDeleteResult').innerText = data.message);
+                .then(data => {
+                    console.log("DELETE response:", data);
+                    document.getElementById('applicationDeleteResult').innerText = data.message;
+                    lastCreatedApplicationId = null;
+                });
         }
 
         // =================== USERS ===================
-        function loadUser(id) {
-            fetch(`http://localhost:3000/users/${id}`)
+
+        function loadUser(userId) {
+            fetch(`http://localhost:3000/users/${userId}`)
                 .then(res => res.json())
                 .then(user => {
+                    if (user.message === "User not found") {
+                        document.getElementById('userDetails').innerHTML = `<p style="color:red;">User ${userId} not found</p>`;
+                        return;
+                    }
                     document.getElementById('userDetails').innerHTML = `
-                        <p>Name: ${user.full_name}</p>
-                        <p>Email: ${user.email}</p>
-                        <p>Role: ${user.role}</p>
-                        <p>Status: ${user.status}</p>
-                    `;
-                });
+                    <p><strong>ID:</strong> ${user.id}</p>
+                    <p><strong>Name:</strong> ${user.full_name}</p>
+                    <p><strong>Email:</strong> ${user.email}</p>
+                    <p><strong>Role:</strong> ${user.role}</p>
+                    <p><strong>Status:</strong> ${user.status || "active"}</p>
+                `;
+                })
+                .catch(err => console.error(err));
         }
 
         function createUser() {
@@ -198,33 +235,49 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    full_name: "New User",
-                    email: "newuser@example.com",
+                    full_name: "New User " + Math.floor(Math.random() * 1000),
+                    email: "user" + Math.floor(Math.random() * 1000) + "@example.com",
                     password: "password123",
                     role: "applicant"
                 })
-            }).then(res => res.json())
-                .then(data => document.getElementById('userPostResult').innerText = `User created with ID: ${data.id}`);
+            })
+                .then(res => res.json())
+                .then(data => {
+                    lastCreatedUserId = data.id;
+                    document.getElementById('userPostResult').innerText = `✅ User created with ID: ${data.id}`;
+                });
         }
 
-        function updateUser(id) {
-            fetch(`http://localhost:3000/users/${id}`, {
+        function updateUser() {
+            if (!lastCreatedUserId) {
+                alert("⚠️ Create a user first!");
+                return;
+            }
+            fetch(`http://localhost:3000/users/${lastCreatedUserId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     full_name: "Alice Updated",
-                    email: "alice@example.com",
+                    email: "alice" + Math.floor(Math.random() * 1000) + "@example.com",
                     password: "newpassword",
                     role: "admin"
                 })
-            }).then(res => res.json())
+            })
+                .then(res => res.json())
                 .then(data => document.getElementById('userPutResult').innerText = data.message);
         }
 
-        function deleteUser(id) {
-            fetch(`http://localhost:3000/users/${id}`, { method: 'DELETE' })
+        function deleteUser() {
+            if (!lastCreatedUserId) {
+                alert("⚠️ No user to delete!");
+                return;
+            }
+            fetch(`http://localhost:3000/users/${lastCreatedUserId}`, { method: 'DELETE' })
                 .then(res => res.json())
-                .then(data => document.getElementById('userDeleteResult').innerText = data.message);
+                .then(data => {
+                    document.getElementById('userDeleteResult').innerText = data.message;
+                    lastCreatedUserId = null;
+                });
         }
     </script>
 </body>
