@@ -23,7 +23,8 @@ CREATE TABLE users (
     role ENUM('admin', 'employer', 'applicant') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('active','banned','inactive') DEFAULT 'active'
+    status ENUM('active','banned','inactive') DEFAULT 'active',
+    INDEX idx_role(role)  -- ✅ moved here (indexes must come after column definitions)
 );
 
 -- Event: Automatically deactivate users inactive for 15 days
@@ -49,16 +50,20 @@ CREATE TABLE applicant_profiles (
 );
 
 -- =========================================
--- 6️⃣ Company Profiles
+-- 6️⃣ Companies Profiles
 -- =========================================
-CREATE TABLE company_profiles (
-    user_id INT PRIMARY KEY,
-    company_name VARCHAR(255) NOT NULL,
-    website VARCHAR(255),
+CREATE TABLE companies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    website VARCHAR(255) UNIQUE,
+    email VARCHAR(100) UNIQUE,
+    phone VARCHAR(20) UNIQUE,
     industry VARCHAR(100),
     location VARCHAR(100),
     description TEXT,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_name(name)  -- ✅ moved after foreign keys; commas fixed
 );
 
 -- =========================================
@@ -74,21 +79,26 @@ CREATE TABLE job_categories (
 -- =========================================
 CREATE TABLE advertisements (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT NOT NULL,  -- ✅ added missing type
     title VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
+    short_description TEXT,
+    full_description TEXT,
+    salary VARCHAR(100),
     location VARCHAR(100),
-    salary_range VARCHAR(100),
+    working_hours VARCHAR(50),
     employment_type ENUM('full-time', 'part-time', 'contract', 'internship') DEFAULT 'full-time',
     experience_level ENUM('junior','mid','senior','lead') DEFAULT 'junior',
     remote_type ENUM('remote','hybrid','on-site') DEFAULT 'on-site',
-    company_id INT NOT NULL,
     category_id INT,
     created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (company_id) REFERENCES company_profiles(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id) REFERENCES job_categories(id)
+    FOREIGN KEY (category_id) REFERENCES job_categories(id),
+    INDEX idx_title(title),
+    INDEX idx_location(location),
+    UNIQUE (company_id, title, location)  -- ✅ fixed comma placement and order
 );
 
 -- =========================================
@@ -96,21 +106,24 @@ CREATE TABLE advertisements (
 -- =========================================
 CREATE TABLE applications (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    advertisement_id INT NOT NULL,
+    job_id INT NOT NULL,
     applicant_id INT NOT NULL,
+    message TEXT,
     cover_letter TEXT,
     application_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending', 'reviewed', 'rejected', 'accepted') DEFAULT 'pending',
-    FOREIGN KEY (advertisement_id) REFERENCES advertisements(id) ON DELETE CASCADE,
-    FOREIGN KEY (applicant_id) REFERENCES users(id) ON DELETE CASCADE
+    UNIQUE (job_id, applicant_id),  -- ✅ moved to correct position
+    FOREIGN KEY (job_id) REFERENCES advertisements(id) ON DELETE CASCADE,  -- ✅ fixed reference (was jobs)
+    FOREIGN KEY (applicant_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_status(status)
 );
 
 -- =========================================
--- 10️⃣ Skills Table (Normalize skills)
+-- 🔟 Skills Tables (Normalized)
 -- =========================================
 CREATE TABLE skills (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL UNIQUE  -- ✅ unique skill names to avoid duplicates
 );
 
 CREATE TABLE applicant_skills (
@@ -118,15 +131,19 @@ CREATE TABLE applicant_skills (
     skill_id INT,
     PRIMARY KEY(applicant_id, skill_id),
     FOREIGN KEY(applicant_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY(skill_id) REFERENCES skills(id) ON DELETE CASCADE
+    FOREIGN KEY(skill_id) REFERENCES skills(id) ON DELETE CASCADE,
+    INDEX idx_applicant_id(applicant_id),
+    INDEX idx_skill_id(skill_id)
 );
 
 CREATE TABLE job_skills (
-    advertisement_id INT,
+    job_id INT,
     skill_id INT,
-    PRIMARY KEY(advertisement_id, skill_id),
-    FOREIGN KEY(advertisement_id) REFERENCES advertisements(id) ON DELETE CASCADE,
-    FOREIGN KEY(skill_id) REFERENCES skills(id) ON DELETE CASCADE
+    PRIMARY KEY(job_id, skill_id),
+    FOREIGN KEY(job_id) REFERENCES advertisements(id) ON DELETE CASCADE,  -- ✅ fixed reference (was jobs)
+    FOREIGN KEY(skill_id) REFERENCES skills(id) ON DELETE CASCADE,
+    INDEX idx_job_id(job_id),
+    INDEX idx_skill_id(skill_id)
 );
 
 -- =========================================
@@ -141,5 +158,6 @@ CREATE TABLE email_logs (
     application_id INT,
     status ENUM('sent','failed') DEFAULT 'sent',
     email_type ENUM('confirmation','rejection','offer','reminder') DEFAULT 'confirmation',
-    FOREIGN KEY (application_id) REFERENCES applications(id)
+    FOREIGN KEY (application_id) REFERENCES applications(id),
+    INDEX idx_recipient_email(recipient_email)
 );
