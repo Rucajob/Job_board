@@ -78,18 +78,19 @@ app.get("/users/:id", async (req, res) => {
 });
 
 app.post("/users", async (req, res) => {
-  const { full_name, email, password, role } = req.body;
+  const { full_name, email, password, role, phone } = req.body;
   try {
     const [result] = await pool.query(
-      "INSERT INTO users (full_name, email, password, role) VALUES (?, ?, ?, ?)",
-      [full_name, email, password, role || "applicant"]
+      "INSERT INTO users (full_name, email, password, role, phone) VALUES (?, ?, ?, ?, ?)",
+      [full_name, email, password, role || "applicant", phone || null]
     );
-    res.status(201).json({ id: result.insertId, full_name, email, role });
+    res.status(201).json({ id: result.insertId, full_name, email, role: role || "applicant", phone });
   } catch (err) {
+    console.error("❌ Error creating user:", err.sqlMessage || err.message); // 👈 ajoute ça
     if (err.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "Email already exists" });
     }
-    console.error(err);
+    console.error("❌ Error creating user:", err);
     res.status(500).json({ error: "Database error" });
   }
 });

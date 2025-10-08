@@ -274,6 +274,126 @@
                 });
         }
     </script>
+
+    <hr>
+    <h2>Job List with Apply Button</h2>
+    <div id="jobList"></div>
+
+    <script>
+        // =================== STEP 5 ===================
+        async function loadJobList() {
+            const res = await fetch('http://localhost:3000/jobs');
+            const jobs = await res.json();
+            const container = document.getElementById('jobList');
+            container.innerHTML = "";
+
+            if (jobs.length === 0) {
+                container.innerHTML = "<p>No jobs available yet.</p>";
+                return;
+            }
+
+            jobs.forEach(job => {
+                const div = document.createElement('div');
+                div.style.border = "1px solid #ccc";
+                div.style.margin = "10px 0";
+                div.style.padding = "10px";
+                div.style.borderRadius = "6px";
+                div.innerHTML = `
+                <h3>${job.title}</h3>
+                <p>${job.short_description}</p>
+                <p><strong>Location:</strong> ${job.location}</p>
+                <p><strong>Salary:</strong> ${job.salary}</p>
+                <button onclick="toggleApplyForm(${job.id}, '${job.title}')">Apply</button>
+                <div id="applyForm-${job.id}" style="display:none; margin-top:10px;">
+                    <input type="text" id="name-${job.id}" placeholder="Full name" required><br>
+                    <input type="email" id="email-${job.id}" placeholder="Email" required><br>
+                    <input type="text" id="phone-${job.id}" placeholder="Phone"><br>
+                    <textarea id="message-${job.id}" placeholder="Your message" required></textarea><br>
+                    <button onclick="sendApplication(${job.id})">Send Application</button>
+                    <p id="applyResult-${job.id}" style="margin-top:5px;"></p>
+                </div>
+            `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleApplyForm(jobId) {
+            const form = document.getElementById(`applyForm-${jobId}`);
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
+
+        async function sendApplication(jobId) {
+            const name = document.getElementById(`name-${jobId}`).value;
+            const email = document.getElementById(`email-${jobId}`).value;
+            const phone = document.getElementById(`phone-${jobId}`).value;
+            const message = document.getElementById(`message-${jobId}`).value;
+            const result = document.getElementById(`applyResult-${jobId}`);
+
+            if (!name || !email || !message) {
+                result.style.color = "red";
+                result.innerText = "⚠️ Please fill in all required fields.";
+                return;
+            }
+
+            try {
+                // Step 1: Create or get existing user
+                let userRes = await fetch('http://localhost:3000/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        full_name: name,
+                        email,
+                        phone,
+                        password: "default123",
+                        role: "applicant"
+                    })
+                });
+
+                if (!userRes.ok) {
+                    throw new Error("User creation failed (" + userRes.status + ")");
+                }
+
+                let userData = await userRes.json();
+
+
+                // If email already exists, get existing user from DB
+                if (userData.error === "Email already exists") {
+                    const usersRes = await fetch('http://localhost:3000/users');
+                    const users = await usersRes.json();
+                    const existingUser = users.find(u => u.email === email);
+                    if (!existingUser) throw new Error("Existing user not found");
+                    userData = existingUser;
+                }
+
+                // Step 2: Create application
+                const appRes = await fetch('http://localhost:3000/applications', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        job_id: jobId,
+                        user_id: userData.id,
+                        message
+                    })
+                });
+
+                const appData = await appRes.json();
+                if (appData.error) throw new Error(appData.error);
+
+                result.style.color = "green";
+                result.innerText = `✅ Application submitted successfully! (ID: ${appData.id})`;
+            } catch (err) {
+                console.error(err);
+                result.style.color = "red";
+                result.innerText = "❌ Error submitting application.";
+            }
+        }
+
+        // Charger la liste au démarrage
+        loadJobList();
+    </script>
+
+
+
 </body>
 
 </html>
