@@ -86,7 +86,7 @@ app.post("/users", async (req, res) => {
     );
     res.status(201).json({ id: result.insertId, full_name, email, role: role || "applicant", phone });
   } catch (err) {
-    console.error("❌ Error creating user:", err.sqlMessage || err.message); // 👈 ajoute ça
+    console.error("❌ Error creating user:", err.sqlMessage || err.message);
     if (err.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "Email already exists" });
     }
