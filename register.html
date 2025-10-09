@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Job Board</title>
+  </head>
+  <body>
+    <h1>Register</h1>
+
+    <form id="registerForm">
+      <label>Full name</label><br />
+      <input
+        id="full_name"
+        required
+        title="Full name"
+        placeholder="Enter your full name"
+      /><br /><br />
+
+      <label>Email</label><br />
+      <input
+        id="email"
+        type="email"
+        required
+        placeholder="Enter your email"
+        title="Email"
+      /><br /><br />
+
+      <label>Password</label><br />
+      <input
+        id="password"
+        type="password"
+        required
+        placeholder="Enter your password"
+        title="Password"
+      /><br /><br />
+
+      <label for="role">Role</label><br />
+      <select id="role">
+        <option value="applicant">Applicant</option>
+        <option value="employer">Employer</option></select
+      ><br /><br />
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p id="message"></p>
+    <p><a href="login.html">Already have an account? Login</a></p>
+
+    <script src="js/auth.js"></script>
+  </body>
+</html>

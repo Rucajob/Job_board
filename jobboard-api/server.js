@@ -1,218 +1,193 @@
+// jobboard-api/server.js
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import pool from "./db.js";
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
+import bcrypt from "bcryptjs"; // for password hashing
+import jwt from "jsonwebtoken";
 
-dotenv.config(); 
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// 🌍 Port
+// serve static files from project root (so index.html, login.html, register.html are accessible)
+app.use(express.static(path.join(__dirname, "..")));
+
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || "change_this_secret_in_env";
 
-// =============================
-//  INDEX.HTML
-// =============================
+// ---------------------------
+// Helper: auth middleware
+// ---------------------------
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token)
+    return res
+      .status(401)
+      .json({ message: "Access denied: No token provided" });
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'index.html'));
-});
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err)
+      return res.status(403).json({ message: "Invalid or expired token" });
+    req.user = user; // { id, email, role }
+    next();
+  });
+}
 
-// =============================
-//  COMPANIES CRUD
-// =============================
-app.get("/companies", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM companies");
-  res.json(rows);
-});
+// ======================
+// AUTH ROUTES
+// ======================
 
-app.get("/companies/:id", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM companies WHERE id = ?", [req.params.id]);
-  if (rows.length === 0) return res.status(404).json({ message: "Company not found" });
-  res.json(rows[0]);
-});
-
-app.post("/companies", async (req, res) => {
-  const { name, website, email, phone } = req.body;
-  const [result] = await pool.query(
-    "INSERT INTO companies (name, website, email, phone) VALUES (?, ?, ?, ?)",
-    [name, website, email, phone]
-  );
-  res.status(201).json({ id: result.insertId, name, website, email, phone });
-});
-
-app.put("/companies/:id", async (req, res) => {
-  const { name, website, email, phone } = req.body;
-  await pool.query(
-    "UPDATE companies SET name=?, website=?, email=?, phone=? WHERE id=?",
-    [name, website, email, phone, req.params.id]
-  );
-  res.json({ message: "Company updated" });
-});
-
-app.delete("/companies/:id", async (req, res) => {
-  await pool.query("DELETE FROM companies WHERE id=?", [req.params.id]);
-  res.json({ message: "Company deleted" });
-});
-
-// =============================
-//  USERS CRUD
-// =============================
-app.get("/users", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM users");
-  res.json(rows);
-});
-
-app.get("/users/:id", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [req.params.id]);
-  if (rows.length === 0) return res.status(404).json({ message: "User not found" });
-  res.json(rows[0]);
-});
-
-app.post("/users", async (req, res) => {
+// Register
+app.post("/auth/register", async (req, res) => {
   const { full_name, email, password, role } = req.body;
+  if (!full_name || !email || !password)
+    return res.status(400).json({ message: "Missing fields" });
+
   try {
+    const hashed = await bcrypt.hash(password, 10);
     const [result] = await pool.query(
       "INSERT INTO users (full_name, email, password, role) VALUES (?, ?, ?, ?)",
-      [full_name, email, password, role || "applicant"]
+      [full_name, email, hashed, role || "applicant"]
     );
-    res.status(201).json({ id: result.insertId, full_name, email, role });
+    res
+      .status(201)
+      .json({ message: "User registered", userId: result.insertId });
   } catch (err) {
-    if (err.code === "ER_DUP_ENTRY") {
-      return res.status(400).json({ error: "Email already exists" });
-    }
+    if (err.code === "ER_DUP_ENTRY")
+      return res.status(400).json({ message: "Email already exists" });
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ message: "Database error" });
   }
 });
 
-app.put("/users/:id", async (req, res) => {
-  const { full_name, email, password, role, status } = req.body;
-  await pool.query(
-    "UPDATE users SET full_name=?, email=?, password=?, role=?, status=? WHERE id=?",
-    [full_name, email, password, role, status || "active", req.params.id]
-  );
-  res.json({ message: "User updated" });
-});
+// Login
+app.post("/auth/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password)
+    return res.status(400).json({ message: "Missing fields" });
 
-app.delete("/users/:id", async (req, res) => {
-  const [result] = await pool.query("DELETE FROM users WHERE id=?", [req.params.id]);
-  if (result.affectedRows === 0) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
+    if (rows.length === 0)
+      return res.status(400).json({ message: "Invalid email or password" });
+
+    const user = rows[0];
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok)
+      return res.status(400).json({ message: "Invalid email or password" });
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      JWT_SECRET,
+      {
+        expiresIn: "2h",
+      }
+    );
+
+    await pool.query("UPDATE users SET last_login = NOW() WHERE id = ?", [
+      user.id,
+    ]);
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        full_name: user.full_name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
-  res.json({ message: "User deleted" });
 });
 
-// =============================
-//  JOBS CRUD
-// =============================
+// Get current user info
+app.get("/auth/me", authenticateToken, async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT id, full_name, email, role FROM users WHERE id = ?",
+      [req.user.id]
+    );
+    if (rows.length === 0)
+      return res.status(404).json({ message: "User not found" });
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Database error" });
+  }
+});
 
-// 🧠 "Learn more" button => GET /jobs/:id
+// ======================
+// YOUR EXISTING CRUD ROUTES (companies, users, jobs) - keep as you had them
+// (you can paste your existing routes here, unchanged)
+// For clarity I'll show the jobs GET/:id and list route used by index.html
+// ======================
+
 app.get("/jobs/:id", async (req, res) => {
   const [rows] = await pool.query(
-    `SELECT j.*, c.name AS company_name, c.website, c.email AS company_email
-     FROM jobs j
-     JOIN companies c ON j.company_id = c.id
-     WHERE j.id = ?`,
+    `SELECT a.*, c.name AS company_name
+     FROM advertisements a
+     LEFT JOIN companies c ON a.company_id = c.id
+     WHERE a.id = ?`,
     [req.params.id]
   );
-  if (rows.length === 0) return res.status(404).json({ message: "Job not found" });
+  if (rows.length === 0)
+    return res.status(404).json({ message: "Job not found" });
   res.json(rows[0]);
 });
 
-// Liste des jobs
 app.get("/jobs", async (req, res) => {
-  const search = req.query.q;
-  let query = "SELECT * FROM jobs";
-  let params = [];
-
-  if (search) {
-    query += " WHERE title LIKE ? OR location LIKE ?";
-    params = [`%${search}%`, `%${search}%`];
-  }
-
-  const [rows] = await pool.query(query, params);
+  const [rows] = await pool.query(
+    "SELECT * FROM advertisements ORDER BY created_at DESC"
+  );
   res.json(rows);
 });
 
-// Créer un job
-app.post("/jobs", async (req, res) => {
-  const { company_id, title, short_description, full_description, salary, location, working_hours } = req.body;
-  const [result] = await pool.query(
-    `INSERT INTO jobs (company_id, title, short_description, full_description, salary, location, working_hours)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [company_id, title, short_description, full_description, salary, location, working_hours]
-  );
-  res.status(201).json({ id: result.insertId, title });
-});
+// ======================
+// APPLICATIONS (protected)
+// ======================
+// Note: table uses `applicant_id` (per your Init.sql)
+app.post("/applications", authenticateToken, async (req, res) => {
+  const { job_id, message } = req.body;
+  const applicant_id = req.user.id;
 
-// Mettre à jour un job
-app.put("/jobs/:id", async (req, res) => {
-  const { company_id, title, short_description, full_description, salary, location, working_hours } = req.body;
-  await pool.query(
-    `UPDATE jobs SET company_id=?, title=?, short_description=?, full_description=?, salary=?, location=?, working_hours=? WHERE id=?`,
-    [company_id, title, short_description, full_description, salary, location, working_hours, req.params.id]
-  );
-  res.json({ message: "Job updated" });
-});
+  if (!job_id) return res.status(400).json({ message: "job_id is required" });
 
-// Supprimer un job
-app.delete("/jobs/:id", async (req, res) => {
-  await pool.query("DELETE FROM jobs WHERE id=?", [req.params.id]);
-  res.json({ message: "Job deleted" });
-});
+  try {
+    const [result] = await pool.query(
+      "INSERT INTO applications (job_id, applicant_id, message) VALUES (?, ?, ?)",
+      [job_id, applicant_id, message || null]
+    );
 
-// =============================
-//  APPLICATIONS CRUD
-// =============================
-app.get("/applications", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM applications");
-  res.json(rows);
-});
-
-app.get("/applications/:id", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM applications WHERE id=?", [req.params.id]);
-  if (rows.length === 0) return res.status(404).json({ message: "Application not found" });
-  res.json(rows[0]);
-});
-
-app.post("/applications", async (req, res) => {
-  const { job_id, user_id, message } = req.body;
-  const [result] = await pool.query(
-    "INSERT INTO applications (job_id, user_id, message) VALUES (?, ?, ?)",
-    [job_id, user_id, message]
-  );
-  res.status(201).json({ id: result.insertId, job_id, user_id, message });
-});
-
-app.put("/applications/:id", async (req, res) => {
-  const { job_id, user_id, message, status } = req.body;
-  await pool.query(
-    "UPDATE applications SET job_id=?, user_id=?, message=?, status=? WHERE id=?",
-    [job_id, user_id, message, status, req.params.id]
-  );
-  res.json({ message: "Application updated" });
-});
-
-app.delete("/applications/:id", async (req, res) => {
-  const [result] = await pool.query("DELETE FROM applications WHERE id=?", [req.params.id]);
-  if (result.affectedRows === 0) {
-    return res.status(404).json({ message: "Application not found" });
+    res.status(201).json({
+      id: result.insertId,
+      job_id,
+      applicant_id,
+      message: message || null,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Database error" });
   }
-  res.json({ message: "Application deleted" });
 });
 
-// =============================
-//  SERVEUR
-// =============================
+// Keep your other older CRUD endpoints (companies, users admin routes, etc.) as needed.
+// If you had routes already for /companies, /users, /applications GET etc. keep them too.
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
