@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ruca - Connexion</title>
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header">
+      <div class="topbar">
+        <div class="logo">RUCA</div>
+        <div class="icons">
+        <nav class="links" aria-label="Navigation principale">
+          <a href="#">accueil</a>
+          <a href="#">connexion</a>
+          <a href="#">inscription</a>
+          <a href="#">contact</a>
+        </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION INSCRIPTION -->
+    <main class="signup" id="inscription">
+      <h1>Connexion</h1>
+
+      <!-- Onglets -->
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" class="tab">Candidat</button>
+        <button role="tab" aria-selected="false" class="tab">Entreprise</button>
+      </div>
+
+      <!-- Formulaire -->
+      <form class="form" action="#" method="post">
+        <div class="form__field">
+          <label for="email">Email :</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Votre email..."
+            required
+          />
+        </div>
+
+        <div class="form__field">
+          <label for="password">Password :</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Votre mot de passe..."
+            required
+          />
+        </div>
+
+        <div class="form__actions">
+          <button type="submit" class="btn">Se connecter</button>
+        </div>
+      </form>
+    </main>
+
+      <footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h3>À propos</h3>
+      <ul>
+        <li><a href="#">Qui sommes-nous</a></li>
+        <li><a href="#">Notre mission</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Aide</h3>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Légal</h3>
+      <ul>
+        <li><a href="#">Mentions légales</a></li>
+        <li><a href="#">Politique de confidentialité</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © <span id="year"></span> Ruca — Tous droits réservés
+  </div>
+</footer>
+  </body>
+</html>
