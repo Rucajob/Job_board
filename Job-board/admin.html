@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        padding: 2rem;
+      }
+      table {
+        margin-bottom: 2rem;
+      }
+      .table-container {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Admin Dashboard</h1>
+    <div id="welcome"></div>
+
+    <hr />
+
+    <!-- Users Table -->
+    <h2>Users</h2>
+    <div class="table-container">
+      <table class="table table-striped" id="usersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <nav>
+        <button id="usersPrev" class="btn btn-sm btn-secondary">Prev</button>
+        <span id="usersPage"></span>
+        <button id="usersNext" class="btn btn-sm btn-secondary">Next</button>
+      </nav>
+    </div>
+
+    <!-- Companies Table -->
+    <h2>Companies</h2>
+    <div class="table-container">
+      <table class="table table-striped" id="companiesTable">
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Company Name</th>
+            <th>Website</th>
+            <th>Industry</th>
+            <th>Location</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <nav>
+        <button id="companiesPrev" class="btn btn-sm btn-secondary">
+          Prev
+        </button>
+        <span id="companiesPage"></span>
+        <button id="companiesNext" class="btn btn-sm btn-secondary">
+          Next
+        </button>
+      </nav>
+    </div>
+
+    <!-- Jobs Table -->
+    <h2>Jobs</h2>
+    <div class="table-container">
+      <table class="table table-striped" id="jobsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <nav>
+        <button id="jobsPrev" class="btn btn-sm btn-secondary">Prev</button>
+        <span id="jobsPage"></span>
+        <button id="jobsNext" class="btn btn-sm btn-secondary">Next</button>
+      </nav>
+    </div>
+
+    <!-- Applications Table -->
+    <h2>Applications</h2>
+    <div class="table-container">
+      <table class="table table-striped" id="applicationsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Job</th>
+            <th>Applicant</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <nav>
+        <button id="applicationsPrev" class="btn btn-sm btn-secondary">
+          Prev
+        </button>
+        <span id="applicationsPage"></span>
+        <button id="applicationsNext" class="btn btn-sm btn-secondary">
+          Next
+        </button>
+      </nav>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>
