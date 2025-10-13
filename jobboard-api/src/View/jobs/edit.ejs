@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Modifier un job</title>
+</head>
+<body>
+  <h1>Modifier : <%= job.title %></h1>
+  <form method="POST" action="/jobs/edit/<%= job.id %>">
+    <label>Titre :</label><input name="title" value="<%= job.title %>" required><br>
+    <label>Description courte :</label><input name="short_description" value="<%= job.short_description %>"><br>
+    <label>Description complète :</label><textarea name="full_description"><%= job.full_description %></textarea><br>
+    <label>Salaire :</label><input name="salary" value="<%= job.salary %>"><br>
+    <label>Localisation :</label><input name="location" value="<%= job.location %>"><br>
+    <label>Heures :</label><input name="working_hours" value="<%= job.working_hours %>"><br>
+    <button type="submit">Enregistrer</button>
+  </form>
+  <a href="/jobs">⬅ Retour</a>
+</body>
+</html>

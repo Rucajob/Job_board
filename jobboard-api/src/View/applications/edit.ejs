@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Modifier candidature</title></head>
+<body>
+  <h1>Modifier la candidature #<%= app.id %></h1>
+  <form method="POST" action="/applications/edit/<%= app.id %>">
+    <label>ID Job :</label><input name="job_id" value="<%= app.job_id %>"><br>
+    <label>ID Utilisateur :</label><input name="user_id" value="<%= app.user_id %>"><br>
+    <label>Message :</label><textarea name="message"><%= app.message %></textarea><br>
+    <label>Statut :</label><input name="status" value="<%= app.status %>"><br>
+    <button>Mettre à jour</button>
+  </form>
+  <a href="/applications">⬅ Retour</a>
+</body>
+</html>

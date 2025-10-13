@@ -8,6 +8,7 @@ import usersRoutes from "./routes/usersRoutes.js";
 import companiesRoutes from "./routes/companiesRoutes.js";
 import jobsRoutes from "./routes/jobsRoutes.js";
 import applicationsRoutes from "./routes/applicationsRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,5 +28,6 @@ app.use("/users", usersRoutes);
 app.use("/companies", companiesRoutes);
 app.use("/jobs", jobsRoutes);
 app.use("/applications", applicationsRoutes);
+app.use("/auth", authRoutes);
 
 export default app;

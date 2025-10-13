@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Entreprises</title></head>
+<body>
+  <h1>Liste des entreprises</h1>
+  <a href="/companies/add">➕ Ajouter</a>
+  <table border="1" cellpadding="10">
+    <tr>
+      <th>ID</th><th>Nom</th><th>Site</th><th>Email</th><th>Téléphone</th><th>Actions</th>
+    </tr>
+    <% companies.forEach(c => { %>
+      <tr>
+        <td><%= c.id %></td>
+        <td><%= c.name %></td>
+        <td><%= c.website %></td>
+        <td><%= c.email %></td>
+        <td><%= c.phone %></td>
+        <td>
+          <a href="/companies/edit/<%= c.id %>">✏️ Modifier</a> |
+          <form method="POST" action="/companies/delete/<%= c.id %>" style="display:inline;">
+            <button>🗑 Supprimer</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+</body>
+</html>

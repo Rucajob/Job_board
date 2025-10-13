@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Ajouter utilisateur</title></head>
+<body>
+  <h1>Nouvel utilisateur</h1>
+  <form method="POST" action="/users/add">
+    <label>Nom complet :</label><input name="full_name" required><br>
+    <label>Email :</label><input name="email" type="email" required><br>
+    <label>Mot de passe :</label><input name="password" type="password" required><br>
+    <label>Rôle :</label><input name="role" value="applicant"><br>
+    <label>Téléphone :</label><input name="phone"><br>
+    <button>Créer</button>
+  </form>
+  <a href="/users">⬅ Retour</a>
+</body>
+</html>

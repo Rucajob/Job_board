@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Modifier utilisateur</title></head>
+<body>
+  <h1>Modifier : <%= user.full_name %></h1>
+  <form method="POST" action="/users/edit/<%= user.id %>">
+    <label>Nom complet :</label><input name="full_name" value="<%= user.full_name %>"><br>
+    <label>Email :</label><input name="email" value="<%= user.email %>"><br>
+    <label>Rôle :</label><input name="role" value="<%= user.role %>"><br>
+    <label>Téléphone :</label><input name="phone" value="<%= user.phone %>"><br>
+    <button>Enregistrer</button>
+  </form>
+  <a href="/users">⬅ Retour</a>
+</body>
+</html>

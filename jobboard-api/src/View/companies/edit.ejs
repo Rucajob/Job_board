@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Modifier entreprise</title></head>
+<body>
+  <h1>Modifier : <%= company.name %></h1>
+  <form method="POST" action="/companies/edit/<%= company.id %>">
+    <label>Nom :</label><input name="name" value="<%= company.name %>"><br>
+    <label>Site :</label><input name="website" value="<%= company.website %>"><br>
+    <label>Email :</label><input name="email" value="<%= company.email %>"><br>
+    <label>Téléphone :</label><input name="phone" value="<%= company.phone %>"><br>
+    <button>Mettre à jour</button>
+  </form>
+  <a href="/companies">⬅ Retour</a>
+</body>
+</html>
