@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Candidatures</title></head>
+<body>
+  <h1>Liste des candidatures</h1>
+  <a href="/applications/add">➕ Ajouter</a>
+  <table border="1" cellpadding="10">
+    <tr><th>ID</th><th>Job</th><th>Utilisateur</th><th>Message</th><th>Statut</th><th>Actions</th></tr>
+    <% applications.forEach(a => { %>
+      <tr>
+        <td><%= a.id %></td>
+        <td><%= a.job_id %></td>
+        <td><%= a.user_id %></td>
+        <td><%= a.message %></td>
+        <td><%= a.status %></td>
+        <td>
+          <a href="/applications/edit/<%= a.id %>">✏️ Modifier</a> |
+          <form method="POST" action="/applications/delete/<%= a.id %>" style="display:inline;">
+            <button>🗑 Supprimer</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+</body>
+</html>

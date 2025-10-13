@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>Nouvelle candidature</title></head>
+<body>
+  <h1>Ajouter une candidature</h1>
+  <form method="POST" action="/applications/add">
+    <label>ID Job :</label><input name="job_id" required><br>
+    <label>ID Utilisateur :</label><input name="user_id" required><br>
+    <label>Message :</label><textarea name="message"></textarea><br>
+    <button>Créer</button>
+  </form>
+  <a href="/applications">⬅ Retour</a>
+</body>
+</html>

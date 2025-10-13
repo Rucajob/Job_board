@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter un job</title>
+</head>
+<body>
+  <h1>Ajouter un job</h1>
+  <form method="POST" action="/jobs/add">
+    <label>Titre :</label><input name="title" required><br>
+    <label>Description courte :</label><input name="short_description"><br>
+    <label>Description complète :</label><textarea name="full_description"></textarea><br>
+    <label>Salaire :</label><input name="salary"><br>
+    <label>Localisation :</label><input name="location"><br>
+    <label>Heures :</label><input name="working_hours"><br>
+    <label>Entreprise ID :</label><input type="number" name="company_id" required><br>
+    <button type="submit">Créer</button>
+  </form>
+  <a href="/jobs">⬅ Retour</a>
+</body>
+</html>
