@@ -1,16 +1,16 @@
 import express from "express";
 import {
-  getAllJobs,
-  getJobById,
+  listJobs,
+  showJob,
   createJob,
   updateJob,
   deleteJob
-} from "../controllers/jobsController.js";
+} from "../Controllers/jobsController.js";
 
 const router = express.Router();
 
-router.get("/", getAllJobs);
-router.get("/:id", getJobById);
+router.get("/", listJobs);
+router.get("/:id", showJob);
 router.post("/", createJob);
 router.put("/:id", updateJob);
 router.delete("/:id", deleteJob);
