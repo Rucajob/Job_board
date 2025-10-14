@@ -3,7 +3,6 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Import des routes
 import usersRoutes from "./routes/usersRoutes.js";
 import companiesRoutes from "./routes/companiesRoutes.js";
 import jobsRoutes from "./routes/jobsRoutes.js";
@@ -17,13 +16,24 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Page d'accueil
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../index.html"));
-});
+// 🔹 Configurer EJS
+app.set("view engine", "ejs");
+app.get("/", (req, res) => res.render("pages/accueil"));
+app.set("views", path.join(__dirname, "View"));
 
-// Brancher les routes
+// 🔹 Servir les fichiers statiques (images, CSS, JS)
+app.use(express.static(path.join(__dirname, "public")));
+
+// 🔹 Routes front (EJS)
+app.get("/", (req, res) => res.render("pages/accueil"));
+app.get("/connexion", (req, res) => res.render("pages/login"));
+app.get("/inscription", (req, res) => res.render("pages/signup"));
+app.get("/home", (req, res) => res.render("pages/home"));
+app.get("/candidature", (req, res) => res.render("pages/candidature"));
+
+// 🔹 Routes API
 app.use("/users", usersRoutes);
 app.use("/companies", companiesRoutes);
 app.use("/jobs", jobsRoutes);
