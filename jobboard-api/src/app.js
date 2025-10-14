@@ -20,24 +20,36 @@ app.use(express.urlencoded({ extended: true }));
 
 // 🔹 Configurer EJS
 app.set("view engine", "ejs");
-app.get("/", (req, res) => res.render("pages/accueil"));
 app.set("views", path.join(__dirname, "View"));
 
 // 🔹 Servir les fichiers statiques (images, CSS, JS)
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "View", "public")));
+
+// TESTING PAGE
+app.get("/test", (req, res) => {
+    res.sendFile(path.join(__dirname, "../../index.html"));
+  });
+
+// 🔹 ADMIN
+// tout ce qui commence par /admin/... doit venir du dossier /admin
+// et la route /admin spécifique renvoie la page principale.
+app.use("/admin", express.static(path.join(__dirname, "../../admin")));
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../admin/admin.html"));
+});
 
 // 🔹 Routes front (EJS)
 app.get("/", (req, res) => res.render("pages/accueil"));
 app.get("/connexion", (req, res) => res.render("pages/login"));
 app.get("/inscription", (req, res) => res.render("pages/signup"));
-app.get("/home", (req, res) => res.render("pages/home"));
 app.get("/candidature", (req, res) => res.render("pages/candidature"));
+app.use("/jobs", jobsRoutes);
 
 // 🔹 Routes API
-app.use("/users", usersRoutes);
-app.use("/companies", companiesRoutes);
-app.use("/jobs", jobsRoutes);
-app.use("/applications", applicationsRoutes);
-app.use("/auth", authRoutes);
+app.use("/api/users", usersRoutes);
+app.use("/api/companies", companiesRoutes);
+app.use("/api/jobs", jobsRoutes);
+app.use("/api/applications", applicationsRoutes);
+app.use("/api/auth", authRoutes);
 
 export default app;

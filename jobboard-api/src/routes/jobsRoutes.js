@@ -4,7 +4,9 @@ import {
   showJob,
   createJob,
   updateJob,
-  deleteJob
+  deleteJob,
+  renderJobDetails,
+  renderJobsPage, 
 } from "../Controllers/jobsController.js";
 
 const router = express.Router();
@@ -14,5 +16,10 @@ router.get("/:id", showJob);
 router.post("/", createJob);
 router.put("/:id", updateJob);
 router.delete("/:id", deleteJob);
+
+// ✅ Routes front (EJS)
+router.get("/details/:id", renderJobDetails);
+router.get("/home", renderJobsPage); // affichage page home dynamique
+
 
 export default router;
