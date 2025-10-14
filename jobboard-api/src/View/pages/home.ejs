@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <%- include('../partials/head', { title: 'Offres d’emploi - Ruca JobBoard' }) %>
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+  <main>
+    <h1>Nos offres d’emploi</h1>
+
+    <div class="grid">
+      <% jobs.forEach(job => { %>
+        <div class="card">
+          <img src="<%= job.image || '/images/default-job.jpg' %>" alt="<%= job.title %>">
+          <div class="card-content">
+            <h3><%= job.company_name %></h3>
+            <p><%= job.title %></p>
+            <p class="location">Lieu : <%= job.location %></p>
+            <a href="/jobs/details/<%= job.id %>">Afficher plus</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>
