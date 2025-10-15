@@ -2,24 +2,26 @@ import express from "express";
 import {
   listJobs,
   showJob,
+  addJobForm,
   createJob,
   updateJob,
-  deleteJob,
-  renderJobDetails,
-  renderJobsPage, 
+  deleteJob
 } from "../Controllers/jobsController.js";
 
 const router = express.Router();
 
+// ✅ Page listant les jobs
 router.get("/", listJobs);
-router.get("/:id", showJob);
-router.post("/", createJob);
-router.put("/:id", updateJob);
-router.delete("/:id", deleteJob);
 
-// ✅ Routes front (EJS)
-router.get("/details/:id", renderJobDetails);
-router.get("/home", renderJobsPage); // affichage page home dynamique
+// ✅ Page "Ajouter un job"
+router.get("/add", addJobForm);
+router.post("/add", createJob);
 
+// ✅ Page "Modifier un job"
+router.get("/edit/:id", showJob);
+router.post("/edit/:id", updateJob);
+
+// ✅ Supprimer un job
+router.post("/delete/:id", deleteJob);
 
 export default router;

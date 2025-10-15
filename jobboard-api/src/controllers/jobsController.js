@@ -10,8 +10,9 @@ export const showJob = async (req, res) => {
   res.render("jobs/edit", { job });
 };
 
-export const addJobForm = (req, res) => {
-  res.render("jobs/add");
+export const addJobForm = async (req, res) => {
+  const companies = await Company.getAll();
+  res.render("jobs/add", { companies });
 };
 
 export const createJob = async (req, res) => {
@@ -29,11 +30,11 @@ export const deleteJob = async (req, res) => {
   res.redirect("/jobs");
 };
 
-// 🆕 Page publique "Home" avec toutes les offres
+// 🆕 Page publique "Offres" avec toutes les offres
 export const renderJobsPage = async (req, res) => {
   try {
     const jobs = await Job.getAll();
-    res.render("pages/home", { jobs });
+    res.render("pages/offers", { jobs });
   } catch (error) {
     console.error("Erreur lors du rendu des jobs :", error);
     res.status(500).send("Erreur serveur");

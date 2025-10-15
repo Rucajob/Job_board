@@ -8,6 +8,9 @@ import companiesRoutes from "./routes/companiesRoutes.js";
 import jobsRoutes from "./routes/jobsRoutes.js";
 import applicationsRoutes from "./routes/applicationsRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import industryRoutes from "./routes/industryRoutes.js";
+
+import { renderJobsPage } from "./Controllers/jobsController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,10 +42,13 @@ app.get("/admin", (req, res) => {
 });
 
 // 🔹 Routes front (EJS)
-app.get("/", (req, res) => res.render("pages/accueil"));
-app.get("/connexion", (req, res) => res.render("pages/login"));
-app.get("/inscription", (req, res) => res.render("pages/signup"));
-app.get("/candidature", (req, res) => res.render("pages/candidature"));
+app.get("/", (req, res) => res.render("pages/home"));
+app.get("/login", (req, res) => res.render("pages/login"));
+app.get("/signup", (req, res) => res.render("pages/signup"));
+app.get("/applications", (req, res) => res.render("pages/applications"));
+app.get("/offers", renderJobsPage);
+app.get("/landing", (req, res) => res.render("pages/landing"));
+app.use("/industry", industryRoutes);
 app.use("/jobs", jobsRoutes);
 
 // 🔹 Routes API

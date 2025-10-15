@@ -1,29 +1,72 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <%- include('../partials/head', { title: 'Offres d’emploi - Ruca JobBoard' }) %>
-  <link rel="stylesheet" href="/css/home.css">
-</head>
+  <head>
+    <%- include('../partials/head', { title: 'Accueil - Ruca JobBoard' }) %>
+    <link rel="stylesheet" href="/css/home01.css" />
+  </head>
+  <body>
 
-<body>
-  <%- include('../partials/header') %>
-  <main>
-    <h1>Nos offres d’emploi</h1>
+    <%- include('../partials/header') %>
 
-    <div class="grid">
-      <% jobs.forEach(job => { %>
-        <div class="card">
-          <img src="<%= job.image || '/images/default-job.jpg' %>" alt="<%= job.title %>">
-          <div class="card-content">
-            <h3><%= job.company_name %></h3>
-            <p><%= job.title %></p>
-            <p class="location">Lieu : <%= job.location %></p>
-            <a href="/jobs/details/<%= job.id %>">Afficher plus</a>
-          </div>
+    <img src="/images/fond.png" alt="couleur" />
+
+    <main>
+      <div class="barre">
+        <h5>Trouvez le job de vos rêves</h5>
+        <div class="search">
+          <input placeholder="intitulé du poste" />
+          <input placeholder="Localisation" />
+          <button class="btnrechercher">Rechercher</button>
         </div>
-      <% }) %>
-    </div>
-  </main>
-  <%- include('../partials/footer') %>
-</body>
+      </div>
+
+      <div class="start">
+        <h3>Bienvenue sur Ruca !</h3>
+        <button class="btncommncer">Commencer</button>
+      </div>
+
+      <div class="caroussel">
+        article1 — article2 — article3 — article4
+      </div>
+
+      <div class="inscription">
+        <p>
+          Créez un compte ou connectez-vous pour voir vos recommandations d'emploi personnalisées.
+        </p>
+        <a href="/inscription" class="btnjoin">Rejoignez-nous !</a>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>À propos</h3>
+          <ul>
+            <li><a href="#">Qui sommes-nous</a></li>
+            <li><a href="#">Notre mission</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Aide</h3>
+          <ul>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Légal</h3>
+          <ul>
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        © <span id="year"></span> Ruca — Tous droits réservés
+      </div>
+    </footer>
+
+    <%- include('../partials/footer') %>
+  </body>
 </html>
