@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <title>Ajouter un job</title>
 </head>
+
 <body>
   <h1>Ajouter un job</h1>
   <form method="POST" action="/jobs/add">
@@ -13,9 +15,17 @@
     <label>Salaire :</label><input name="salary"><br>
     <label>Localisation :</label><input name="location"><br>
     <label>Heures :</label><input name="working_hours"><br>
-    <label>Entreprise ID :</label><input type="number" name="company_id" required><br>
+    <label>Entreprise :</label>
+    <select name="company_id" required>
+      <% companies.forEach(c=> { %>
+        <option value="<%= c.id %>">
+          <%= c.name %>
+        </option>
+        <% }) %>
+    </select>
     <button type="submit">Créer</button>
   </form>
   <a href="/jobs">⬅ Retour</a>
 </body>
+
 </html>

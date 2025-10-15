@@ -1,10 +1,98 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Accueil</title>
-</head>
-<body>
-  <h1>Bienvenue sur Job Board</h1>
-  <p>Ceci est la page d'inscription (signup.ejs)</p>
-</body>
+<html lang="fr">
+  <head>
+    <%- include('../partials/head', { title: 'Ruca - Inscription' }) %>
+    <link rel="stylesheet" href="/css/signup.css" />
+  </head>
+
+  <body>
+    <!-- HEADER -->
+    <%- include('../partials/header') %>
+
+    <!-- SECTION INSCRIPTION -->
+    <main class="signup" id="inscription">
+      <h1>Inscription</h1>
+
+      <!-- Onglets -->
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" class="tab">Candidat</button>
+        <button role="tab" aria-selected="false" class="tab">Entreprise</button>
+      </div>
+
+      <!-- Formulaire -->
+      <form class="form" action="/api/users/signup" method="post">
+        <div class="form__field">
+          <label for="email">Email :</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Votre email..."
+            required
+          />
+        </div>
+
+        <div class="form__field">
+          <label for="password">Mot de passe :</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Votre mot de passe..."
+            required
+          />
+        </div>
+
+        <div class="form__field">
+          <label for="siren">SIREN (pour les entreprises) :</label>
+          <input
+            id="siren"
+            name="siren"
+            type="text"
+            placeholder="123456789"
+          />
+        </div>
+
+        <div class="form__actions">
+          <button type="submit" class="btn">Créer un compte</button>
+        </div>
+      </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>À propos</h3>
+          <ul>
+            <li><a href="#">Qui sommes-nous</a></li>
+            <li><a href="#">Notre mission</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Aide</h3>
+          <ul>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Légal</h3>
+          <ul>
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © <span id="year"></span> Ruca — Tous droits réservés
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+    <%- include('../partials/footer') %>
+  </body>
 </html>
