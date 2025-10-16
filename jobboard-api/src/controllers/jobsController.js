@@ -1,4 +1,5 @@
 import Job from "../Model/Jobs.js";
+import Company from "../Model/Companies.js";
 
 export const listJobs = async (req, res) => {
   const jobs = await Job.getAll(req.query.q);
