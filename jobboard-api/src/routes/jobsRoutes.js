@@ -6,22 +6,36 @@ import {
   createJob,
   updateJob,
   deleteJob
-} from "../Controllers/jobsController.js";
+} from "../controllers/jobsController.js";
+
+import { verifyToken, verifyTokenOptional, authorizeRoles } from "../middlewares/auth.js";
+import { checkOwnership } from "../middlewares/checkOwnership.js";
+import Job from "../Model/Jobs.js";
 
 const router = express.Router();
 
-// ✅ Page listant les jobs
-router.get("/", listJobs);
+// 🌐 Public
+router.get("/", verifyTokenOptional, listJobs);
+router.get("/view/:id", verifyTokenOptional, showJob);
 
-// ✅ Page "Ajouter un job"
-router.get("/add", addJobForm);
-router.post("/add", createJob);
+// 👔 Employer/Admin
+router.get("/add", verifyToken, authorizeRoles("employer"), addJobForm);
+router.post("/add", verifyToken, authorizeRoles("employer"), createJob);
 
-// ✅ Page "Modifier un job"
-router.get("/edit/:id", showJob);
-router.post("/edit/:id", updateJob);
+// ✏️ Edit/Update/Delete with ownership check
+router.get("/edit/:id", verifyToken, authorizeRoles("employer", "admin"),
+  checkOwnership(async (id) => await Job.getById(id), "id", "created_by"),
+  showJob
+);
 
-// ✅ Supprimer un job
-router.post("/delete/:id", deleteJob);
+router.put("/:id", verifyToken, authorizeRoles("employer", "admin"),
+  checkOwnership(async (id) => await Job.getById(id), "id", "created_by"),
+  updateJob
+);
+
+router.delete("/:id", verifyToken, authorizeRoles("employer", "admin"),
+  checkOwnership(async (id) => await Job.getById(id), "id", "created_by"),
+  deleteJob
+);
 
 export default router;
