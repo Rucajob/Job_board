@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ruca — Admin</title>
+    <link rel="stylesheet" href="admin.css" />
+    <style>
+      .square {
+        width: 12px;
+        height: 12px;
+        background: #f25c05;
+        border-radius: 3px;
+        display: inline-block;
+        transition: transform 0.25s ease, background 0.2s ease;
+      }
+      .accordion.open .square {
+        transform: rotate(45deg);
+      }
+      .accordion:hover .square {
+        background: #ff7e33;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__brand">RUCA</div>
+      <nav class="topbar__links">
+        <a href="#">accueil</a>
+        <a href="#">déconnexion</a>
+        <a href="#">contact</a>
+      </nav>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar__title">ADMIN</div>
+
+        <nav class="menu">
+          <a class="menu__item is-active" href="#"
+            ><span class="star">★</span> Accueil</a
+          >
+          <a class="menu__item" href="#"><span class="star">★</span> Home</a>
+
+          <div class="menu__section">profil admin</div>
+
+          <button class="accordion" data-acc>
+            <span class="square" aria-hidden="true"></span
+            ><span class="name">lucas</span>
+          </button>
+          <div class="panel">
+            <p class="meta"><strong>Mail :</strong> lucas@ruca.test</p>
+            <p class="meta"><strong>Poste :</strong> Responsable de projet</p>
+            <div class="actions-inline">
+              <button class="btn btn--ghost">modifier</button>
+              <button class="btn btn--ghost btn--danger">supprimer</button>
+            </div>
+          </div>
+
+          <button class="accordion" data-acc>
+            <span class="square" aria-hidden="true"></span
+            ><span class="name">hugo</span>
+          </button>
+          <div class="panel">
+            <p class="meta"><strong>Mail :</strong> hugo@ruca.test</p>
+            <p class="meta"><strong>Poste :</strong> Dev Web — Back-end</p>
+            <div class="actions-inline">
+              <button class="btn btn--ghost">modifier</button>
+              <button class="btn btn--ghost btn--danger">supprimer</button>
+            </div>
+          </div>
+
+          <button class="accordion" data-acc>
+            <span class="square" aria-hidden="true"></span
+            ><span class="name">riyad</span>
+          </button>
+          <div class="panel">
+            <p class="meta"><strong>Mail :</strong> riyad@ruca.test</p>
+            <p class="meta"><strong>Poste :</strong> Dev Web — Front-end</p>
+            <div class="actions-inline">
+              <button class="btn btn--ghost">modifier</button>
+              <button class="btn btn--ghost btn--danger">supprimer</button>
+            </div>
+          </div>
+
+          <a class="menu__item" href="#"
+            ><span class="star">★</span> déconnexion</a
+          >
+        </nav>
+      </aside>
+
+      <main class="content">
+        <h1 class="page-title">Tableau de bord</h1>
+
+        <section class="kpis">
+          <div class="card kpi has-dropdown" id="messageKpi">
+            <div class="kpi__title">Messages</div>
+            <div class="kpi__value">4</div>
+            <button
+              class="btn btn--tiny"
+              id="toggleMessages"
+              aria-expanded="false"
+              aria-controls="messagesDropdown"
+            >
+              voir
+            </button>
+
+            <div class="dropdown" id="messagesDropdown" hidden>
+              <article class="msg">
+                <div class="msg__type">Inscription</div>
+                <p>Nouveau compte : <strong>Paul D.</strong> (12:48)</p>
+              </article>
+              <article class="msg">
+                <div class="msg__type">Dépôt d’annonce</div>
+                <p>Entreprise B a publié <em>Product Designer</em>.</p>
+              </article>
+              <article class="msg">
+                <div class="msg__type">Candidature spontanée</div>
+                <p><strong>Sarah K.</strong> a envoyé son CV.</p>
+              </article>
+              <article class="msg">
+                <div class="msg__type">Avis admin</div>
+                <p>👍 “Interface claire, continuez !”</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpi__title">Entreprises actives</div>
+            <div class="kpi__value">10</div>
+          </div>
+          <div class="card kpi">
+            <div class="kpi__title">Candidats inscrits</div>
+            <div class="kpi__value">10</div>
+          </div>
+        </section>
+
+        <section class="block">
+          <header class="block__head">
+            <h2>Offres d’emploi</h2>
+            <div class="search">
+              <input type="text" placeholder="Rechercher une annonce…" />
+              <button class="btn">Rechercher</button>
+            </div>
+          </header>
+
+          <div class="carousel" data-carousel>
+            <button class="nav nav--left" aria-label="précédent">◀</button>
+            <div class="rail">
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Développeur Web — Frontend</h3>
+                  <p class="job__line">
+                    <strong>Entreprise A</strong> • Bordeaux • CDI • Junior
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Data Analyst — Junior</h3>
+                  <p class="job__line">
+                    <strong>Entreprise B</strong> • Lyon • CDD • 1 an
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">DevOps Engineer</h3>
+                  <p class="job__line">
+                    <strong>Entreprise C</strong> • Toulouse • CDI
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Product Designer</h3>
+                  <p class="job__line">
+                    <strong>Entreprise D</strong> • Nantes • CDI
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Backend Node.js</h3>
+                  <p class="job__line">
+                    <strong>Entreprise E</strong> • Paris • CDI
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">QA / Test Automation</h3>
+                  <p class="job__line">
+                    <strong>Entreprise F</strong> • Grenoble • CDI
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">UX Designer</h3>
+                  <p class="job__line">
+                    <strong>Entreprise G</strong> • Lille • CDD
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Full-Stack JS</h3>
+                  <p class="job__line">
+                    <strong>Entreprise H</strong> • Nice • CDI
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">PO / Chef de projet</h3>
+                  <p class="job__line">
+                    <strong>Entreprise I</strong> • Rennes • CDI
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Admin Système</h3>
+                  <p class="job__line">
+                    <strong>Entreprise J</strong> • Marseille • CDI
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Data Engineer</h3>
+                  <p class="job__line">
+                    <strong>Entreprise K</strong> • Montpellier • CDI
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Support Technique</h3>
+                  <p class="job__line">
+                    <strong>Entreprise L</strong> • Strasbourg • CDD
+                  </p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <button class="nav nav--right" aria-label="suivant">▶</button>
+          </div>
+        </section>
+
+        <section class="block">
+          <header class="block__head"><h2>candidat</h2></header>
+          <div class="carousel" data-carousel>
+            <button class="nav nav--left" aria-label="précédent">◀</button>
+            <div class="rail">
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Candidature — Sarah K.</h3>
+                  <p class="job__line">Frontend • Paris • CV + LM</p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Candidature — Paul D.</h3>
+                  <p class="job__line">QA • Lyon • CV</p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Candidature — Aya M.</h3>
+                  <p class="job__line">UX • Bordeaux • CV</p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Candidature — Leo R.</h3>
+                  <p class="job__line">Back-end • Nantes • CV + LM</p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Candidature — Nora T.</h3>
+                  <p class="job__line">Product • Nice • CV</p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Candidature — Yanis B.</h3>
+                  <p class="job__line">DevOps • Toulouse • CV</p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Candidature — Inès L.</h3>
+                  <p class="job__line">Design • Lille • CV</p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="card job">
+                <div class="placeholder"></div>
+                <div class="job__body">
+                  <h3 class="job__title">Candidature — Omar S.</h3>
+                  <p class="job__line">Support • Rennes • CV</p>
+                  <div class="actions-inline">
+                    <button class="btn btn--ghost">modifier</button
+                    ><button class="btn btn--ghost btn--danger">
+                      supprimer
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <button class="nav nav--right" aria-label="suivant">▶</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.querySelectorAll("[data-acc]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          btn.classList.toggle("open");
+          const panel = btn.nextElementSibling;
+          panel.hidden = !panel.hidden;
+        });
+        btn.nextElementSibling.hidden = true;
+      });
+
+      const toggle = document.getElementById("toggleMessages");
+      const drop = document.getElementById("messagesDropdown");
+      toggle.addEventListener("click", (e) => {
+        drop.hidden = !drop.hidden;
+        toggle.textContent = drop.hidden ? "voir" : "masquer";
+        toggle.setAttribute("aria-expanded", drop.hidden ? "false" : "true");
+        e.stopPropagation();
+      });
+      document.addEventListener("click", (e) => {
+        const kpi = document.getElementById("messageKpi");
+        if (!kpi.contains(e.target)) {
+          drop.hidden = true;
+          toggle.textContent = "voir";
+          toggle.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      document.querySelectorAll("[data-carousel]").forEach((c) => {
+        const rail = c.querySelector(".rail");
+        const left = c.querySelector(".nav--left");
+        const right = c.querySelector(".nav--right");
+        const step = 320;
+        left.addEventListener("click", () =>
+          rail.scrollBy({ left: -step, behavior: "smooth" })
+        );
+        right.addEventListener("click", () =>
+          rail.scrollBy({ left: step, behavior: "smooth" })
+        );
+      });
+    </script>
+  </body>
+</html>
