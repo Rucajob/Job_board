@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ruca — Espace Candidat</title>
+
+    <!-- Police -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="users.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <header class="topbar">
+      <div class="brand">RUCA</div>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="index01.html">accueil</a>
+        <a href="contact.html">contact</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <h1>Espace candidat</h1>
+    </section>
+
+    <!-- CONTENU -->
+    <main class="wrapper">
+      <section class="profile-card" aria-labelledby="wel">
+        <h2 id="wel" class="welcome">Bienvenue <strong>Prénom Nom</strong></h2>
+
+        <!-- Coordonnées -->
+        <div class="contact-list">
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="#111"
+                d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.2-7.4 4.9a1 1 0 0 1-1.2 0L4 8.2V6l8 5.3L20 6v2.2Z"
+              />
+            </svg>
+            <a href="mailto:candidat@test.fr">candidat@test.fr</a>
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="#111"
+                d="M6.6 10.8a15.9 15.9 0 0 0 6.6 6.6l2.2-2.2c.4-.4 1-.5 1.5-.3 1.6.5 3.3.8 5 .8.6 0 1 .4 1 1V20c0 1.1-.9 2-2 2C9.6 22 2 14.4 2 4c0-1.1.9-2 2-2h3.3c.6 0 1 .4 1 1 0 1.7.3 3.4.8 5 .2.5.1 1.1-.3 1.5L6.6 10.8Z"
+              />
+            </svg>
+            <a href="tel:+33600000000">06 00 00 00 00</a>
+          </div>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="#111"
+                d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"
+              />
+            </svg>
+            Nice, France
+          </div>
+        </div>
+
+        <!-- Grille emplois / messages -->
+        <div class="grid">
+          <section class="panel">
+            <h4>Mes emplois</h4>
+
+            <article class="ad-card">
+              <img
+                class="thumb"
+                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=600&auto=format&fit=crop"
+                alt=""
+              />
+              <div>
+                <div class="ad-title">Développeur Web — Entreprise A</div>
+                <div class="ad-meta">Candidature envoyée • Bordeaux</div>
+                <div class="ad-actions">
+                  <a href="#" class="link">Voir l’offre</a>
+                  <a href="#" class="link">Suivi</a>
+                  <a href="#" class="link">Retirer</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="ad-card">
+              <img
+                class="thumb"
+                src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop"
+                alt=""
+              />
+              <div>
+                <div class="ad-title">Backend Node — Entreprise B</div>
+                <div class="ad-meta">En cours d’étude • Paris</div>
+                <div class="ad-actions">
+                  <a href="#" class="link">Voir l’offre</a>
+                  <a href="#" class="link">Suivi</a>
+                  <a href="#" class="link">Retirer</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="ad-card">
+              <img
+                class="thumb"
+                src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=600&auto=format&fit=crop"
+                alt=""
+              />
+              <div>
+                <div class="ad-title">DevOps — Entreprise C</div>
+                <div class="ad-meta">Entretien planifié • Nice</div>
+                <div class="ad-actions">
+                  <a href="#" class="link">Voir l’offre</a>
+                  <a href="#" class="link">Suivi</a>
+                  <a href="#" class="link">Retirer</a>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <aside class="panel">
+            <h4>Messages</h4>
+            <div class="message">
+              Bonjour, merci pour votre candidature. Pourrions-nous fixer un
+              créneau cette semaine ?
+              <small>Entreprise B — 09:30</small>
+            </div>
+            <div class="message">
+              Votre profil nous intéresse, test technique à venir.
+              <small>Entreprise A — 17:45</small>
+            </div>
+            <div class="message">
+              Entretien confirmé jeudi 10h en visio.
+              <small>Entreprise C — 11:10</small>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <footer>© 2025 Ruca. Tous droits réservés.</footer>
+    </main>
+  </body>
+</html>
