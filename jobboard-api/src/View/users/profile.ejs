@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ruca — Espace Candidat</title>
+    <link rel="stylesheet" href="/css/users.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <header class="topbar">
+      <div class="brand">RUCA</div>
+      <nav class="nav">
+        <a href="/">Accueil</a>
+        <a href="/contact">Contact</a>
+        <a href="/users">Admin</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <h1>Espace candidat</h1>
+    </section>
+
+    <!-- CONTENU -->
+    <main class="wrapper">
+      <section class="profile-card">
+        <h2 class="welcome">
+          Bienvenue <strong><%= user.full_name %></strong>
+        </h2>
+
+        <div class="contact-list">
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#111" d="M20 4H4a2 2..."/></svg>
+            <a href="mailto:<%= user.email %>"><%= user.email %></a>
+          </div>
+
+          <% if (user.phone) { %>
+          <div class="contact-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#111" d="M6.6 10.8a15.9..."/></svg>
+            <a href="tel:<%= user.phone %>"><%= user.phone %></a>
+          </div>
+          <% } %>
+        </div>
+
+        <div class="grid">
+          <section class="panel">
+            <h4>Mes candidatures</h4>
+            <% if (applications.length === 0) { %>
+              <p>Aucune candidature pour le moment.</p>
+            <% } else { %>
+              <% applications.forEach(app => { %>
+                <article class="ad-card">
+                  <img
+                    class="thumb"
+                    src="<%= app.image || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=600&auto=format&fit=crop' %>"
+                    alt="Illustration emploi"
+                  />
+                  <div>
+                    <div class="ad-title">
+                      <%= app.title %> — <%= app.company_name || "Entreprise" %>
+                    </div>
+                    <div class="ad-meta">
+                      <%= app.status || "Candidature envoyée" %>
+                    </div>
+                    <div class="ad-actions">
+                      <a href="/jobs/<%= app.job_id %>" class="link">Voir l’offre</a>
+                      <a href="#" class="link">Suivi</a>
+                      <a href="#" class="link">Retirer</a>
+                    </div>
+                  </div>
+                </article>
+              <% }) %>
+            <% } %>
+          </section>
+
+          <aside class="panel">
+            <h4>Messages</h4>
+            <% if (applications.some(a => a.message)) { %>
+              <% applications.forEach(app => { if (app.message) { %>
+                <div class="message">
+                  <%= app.message %>
+                  <small><%= app.company_name || "Entreprise" %></small>
+                </div>
+              <% } }) %>
+            <% } else { %>
+              <p>Aucun message pour le moment.</p>
+            <% } %>
+          </aside>
+        </div>
+      </section>
+
+      <footer>© 2025 Ruca. Tous droits réservés.</footer>
+    </main>
+  </body>
+</html>

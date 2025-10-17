@@ -1,54 +1,55 @@
-import pool from "../config/db.js";
+import User from "../Model/Users.js";
+import Application from "../Model/Applications.js";
 
-// Récupérer tous les utilisateurs
-export const getAllUsers = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM users");
-  res.json(rows);
+// Liste des utilisateurs
+export const listUsers = async (req, res) => {
+  const users = await User.getAll();
+  res.render("users/index", { users });
 };
 
-// Récupérer un utilisateur par ID
-export const getUserById = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [req.params.id]);
-  if (rows.length === 0) return res.status(404).json({ message: "User not found" });
-  res.json(rows[0]);
+// Voir un utilisateur
+export const showUser = async (req, res) => {
+  const user = await User.getById(req.params.id);
+  const applications = await Application.getByUserId(req.params.id);
+  res.render("users/show", { user, applications });
+};
+
+// Formulaire d’ajout
+export const addUserForm = (req, res) => {
+  res.render("users/add");
 };
 
 // Créer un utilisateur
 export const createUser = async (req, res) => {
-  const { full_name, email, password, role, phone } = req.body;
-  try {
-    const [result] = await pool.query(
-      "INSERT INTO users (full_name, email, password, role, phone) VALUES (?, ?, ?, ?, ?)",
-      [full_name, email, password, role || "applicant", phone || null]
-    );
-    res.status(201).json({
-      id: result.insertId,
-      full_name,
-      email,
-      role: role || "applicant",
-      phone
-    });
-  } catch (err) {
-    if (err.code === "ER_DUP_ENTRY")
-      return res.status(400).json({ error: "Email already exists" });
-    res.status(500).json({ error: "Database error" });
-  }
+  await User.create(req.body);
+  res.redirect("/users");
 };
 
-// Mettre à jour un utilisateur
+// Modifier un utilisateur
 export const updateUser = async (req, res) => {
-  const { full_name, email, password, role, status } = req.body;
-  await pool.query(
-    "UPDATE users SET full_name=?, email=?, password=?, role=?, status=? WHERE id=?",
-    [full_name, email, password, role, status || "active", req.params.id]
-  );
-  res.json({ message: "User updated" });
+  await User.update(req.params.id, req.body);
+  res.redirect("/users");
 };
 
 // Supprimer un utilisateur
 export const deleteUser = async (req, res) => {
-  const [result] = await pool.query("DELETE FROM users WHERE id=?", [req.params.id]);
-  if (result.affectedRows === 0)
-    return res.status(404).json({ message: "User not found" });
-  res.json({ message: "User deleted" });
+  await User.delete(req.params.id);
+  res.redirect("/users");
 };
+
+// 🆕 Page publique : profil utilisateur
+export const renderUserProfile = async (req, res) => {
+  try {
+    const user = await User.getById(req.params.id);
+    if (!user) {
+      return res.status(404).render("404", { message: "Utilisateur introuvable" });
+    }
+
+    const applications = await Application.getByUserId(req.params.id);
+    res.render("users/profile", { user, applications });
+  } catch (err) {
+    console.error("Erreur profil utilisateur :", err);
+    res.status(500).send("Erreur serveur");
+  }
+};
+

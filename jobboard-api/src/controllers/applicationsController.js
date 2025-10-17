@@ -1,42 +1,46 @@
-import pool from "../config/db.js";
+import Application from "../Model/Applications.js";
+import Job from "../Model/Jobs.js";
+import User from "../Model/Users.js";
 
-// Obtenir toutes les candidatures
-export const getAllApplications = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM applications");
-  res.json(rows);
+// Liste des candidatures
+export const listApplications = async (req, res) => {
+  const applications = await Application.getAll();
+  res.render("applications/index", { applications });
 };
 
-// Obtenir une candidature par ID
-export const getApplicationById = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM applications WHERE id=?", [req.params.id]);
-  if (rows.length === 0) return res.status(404).json({ message: "Application not found" });
-  res.json(rows[0]);
+// Détail d'une candidature
+export const showApplication = async (req, res) => {
+  const application = await Application.getById(req.params.id);
+  res.render("applications/edit", { application });
+};
+
+// Formulaire de création
+export const addApplicationForm = async (req, res) => {
+  const jobs = await Job.getAll();
+  const users = await User.getAll();
+  res.render("applications/add", { jobs, users });
 };
 
 // Créer une candidature
 export const createApplication = async (req, res) => {
-  const { job_id, user_id, message } = req.body;
-  const [result] = await pool.query(
-    "INSERT INTO applications (job_id, user_id, message) VALUES (?, ?, ?)",
-    [job_id, user_id, message]
-  );
-  res.status(201).json({ id: result.insertId, job_id, user_id, message });
+  await Application.create(req.body);
+  res.redirect("/applications");
 };
 
-// Mettre à jour une candidature
+// Modifier une candidature
 export const updateApplication = async (req, res) => {
-  const { job_id, user_id, message, status } = req.body;
-  await pool.query(
-    "UPDATE applications SET job_id=?, user_id=?, message=?, status=? WHERE id=?",
-    [job_id, user_id, message, status, req.params.id]
-  );
-  res.json({ message: "Application updated" });
+  await Application.update(req.params.id, req.body);
+  res.redirect("/applications");
 };
 
 // Supprimer une candidature
 export const deleteApplication = async (req, res) => {
-  const [result] = await pool.query("DELETE FROM applications WHERE id=?", [req.params.id]);
-  if (result.affectedRows === 0)
-    return res.status(404).json({ message: "Application not found" });
-  res.json({ message: "Application deleted" });
+  await Application.delete(req.params.id);
+  res.redirect("/applications");
+};
+
+// 🆕 Page publique : affichage des candidatures d’un utilisateur
+export const renderUserApplications = async (req, res) => {
+  const applications = await Application.getByUserId(req.params.userId);
+  res.render("pages/userApplications", { applications });
 };

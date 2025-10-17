@@ -1,133 +1,107 @@
 <!DOCTYPE html>
 <html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ruca – Trouvez, connectez, réussissez</title>
+    <link rel="stylesheet" href="/css/landing.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Ruca – trouvez, connectez, réussissez</h1>
+      <nav class="links" aria-label="Navigation principale">
+        <a href="/">accueil</a>
+        <a href="/users">mon compte</a>
+        <a href="/contact">contact</a>
+      </nav>
+    </header>
 
-<head>
-    <%- include('../partials/head', { title: 'Ruca - Landing' }) %>
-        <link rel="stylesheet" href="/css/landing.css" />
-</head>
+    <img src="/images/fond.png" alt="bannière" />
 
-<body>
-    <!-- HEADER -->
-    <%- include('../partials/header') %>
+    <main>
+      <div class="barre">
+        <h5>Trouvez le job de vos rêves</h5>
+        <div class="search">
+          <input placeholder="intitulé du poste" />
+          <input placeholder="Localisation" />
+          <button class="btnrechercher">Rechercher</button>
+        </div>
+      </div>
 
+      <section class="annonces">
+        <h2 class="annonces__title">Offres d’emploi</h2>
 
-        <img src="/images/fond.png" alt="couleur" />
+        <div class="annonces__grid">
+          <% if (offers && offers.length > 0) { %>
+            <% offers.forEach(offer => { %>
+              <article class="card">
+                <div class="card__body">
+                  <h3 class="card__title"><%= offer.company_name %></h3>
+                  <p class="card__desc"><%= offer.title %></p>
+                  <p class="card__meta">📍 <%= offer.location %></p>
 
-        <main>
-            <div class="barre">
-                <h5>Trouvez le job de vos rêves</h5>
-                <div class="search">
-                    <input placeholder="Intitulé du poste" />
-                    <input placeholder="Localisation" />
-                    <button class="btnrechercher">Rechercher</button>
+                  <div class="card__more">
+                    <ul class="card__facts">
+                      <li>💶 <strong>Salaire :</strong> <%= offer.salary || "Non précisé" %></li>
+                      <li>🕒 <strong>Temps de travail :</strong> <%= offer.work_time || "35 h / semaine" %></li>
+                    </ul>
+                    <%= offer.description %>
+                  </div>
+
+                  <div class="card__actions">
+                    <button class="btn-ghost" type="button">En savoir plus</button>
+                    <a class="btn-primary" href="/applications/apply/<%= offer.id %>">Candidater</a>
+                  </div>
                 </div>
-            </div>
+              </article>
+            <% }) %>
+          <% } else { %>
+            <p>Aucune offre pour le moment.</p>
+          <% } %>
+        </div>
+      </section>
+    </main>
 
-            <section class="annonces">
-                <h2 class="annonces__title">Offres d’emploi</h2>
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>À propos</h3>
+          <ul>
+            <li><a href="/about">Qui sommes-nous</a></li>
+            <li><a href="/mission">Notre mission</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Aide</h3>
+          <ul>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/support">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Légal</h3>
+          <ul>
+            <li><a href="/legal">Mentions légales</a></li>
+            <li><a href="/privacy">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © <span id="year"></span> Ruca — Tous droits réservés
+      </div>
+    </footer>
 
-                <div class="annonces__grid">
-                    <article class="card">
-                        <div class="card__body">
-                            <h3 class="card__title">Entreprise A</h3>
-                            <p class="card__desc">Développeur·se Web — Frontend</p>
-                            <p class="card__meta">📍 Bordeaux</p>
+    <script>
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest(".btn-ghost");
+        if (!btn) return;
+        const card = btn.closest(".card");
+        const open = !card.classList.contains("card--open");
+        card.classList.toggle("card--open", open);
+        btn.textContent = open ? "Réduire" : "En savoir plus";
+      });
 
-                            <div class="card__more">
-                                Développement d’interfaces (React), intégration design system,
-                                tests, accessibilité. Télétravail hybride.
-                            </div>
-
-                            <button class="btn-ghost" type="button">En savoir plus</button>
-                        </div>
-                    </article>
-
-                    <article class="card">
-                        <div class="card__body">
-                            <h3 class="card__title">Entreprise B</h3>
-                            <p class="card__desc">Data Analyst — Junior</p>
-                            <p class="card__meta">📍 Lyon</p>
-
-                            <div class="card__more">
-                                SQL, Power BI, nettoyage de données, création de dashboards.
-                            </div>
-
-                            <button class="btn-ghost" type="button">En savoir plus</button>
-                        </div>
-                    </article>
-
-                    <article class="card">
-                        <div class="card__body">
-                            <h3 class="card__title">Entreprise C</h3>
-                            <p class="card__desc">DevOps Engineer</p>
-                            <p class="card__meta">📍 Toulouse</p>
-
-                            <div class="card__more">
-                                CI/CD (GitHub Actions), Kubernetes, observabilité, sécurité.
-                            </div>
-
-                            <button class="btn-ghost" type="button">En savoir plus</button>
-                        </div>
-                    </article>
-
-                    <article class="card">
-                        <div class="card__body">
-                            <h3 class="card__title">Entreprise D</h3>
-                            <p class="card__desc">Product Designer</p>
-                            <p class="card__meta">📍 Nantes</p>
-
-                            <div class="card__more">
-                                UI kits, design system, user research, tests utilisateurs.
-                            </div>
-
-                            <button class="btn-ghost" type="button">En savoir plus</button>
-                        </div>
-                    </article>
-
-                    <article class="card">
-                        <div class="card__body">
-                            <h3 class="card__title">Entreprise E</h3>
-                            <p class="card__desc">Backend Node.js</p>
-                            <p class="card__meta">📍 Paris</p>
-
-                            <div class="card__more">
-                                API REST, sécurité, monitoring, microservices, tests unitaires.
-                            </div>
-
-                            <button class="btn-ghost" type="button">En savoir plus</button>
-                        </div>
-                    </article>
-
-                    <article class="card">
-                        <div class="card__body">
-                            <h3 class="card__title">Entreprise F</h3>
-                            <p class="card__desc">QA / Test Automation</p>
-                            <p class="card__meta">📍 Grenoble</p>
-
-                            <div class="card__more">
-                                Cypress, Playwright, CI/CD, qualité logicielle, reporting.
-                            </div>
-
-                            <button class="btn-ghost" type="button">En savoir plus</button>
-                        </div>
-                    </article>
-                </div>
-            </section>
-        </main>
-
-        <%- include('../partials/footer') %>
-
-            <script>
-                // Toggle "En savoir plus" (déplie le texte sans remonter la page)
-                document.addEventListener("click", (e) => {
-                    const btn = e.target.closest(".btn-ghost");
-                    if (!btn) return;
-                    const card = btn.closest(".card");
-                    const open = !card.classList.contains("card--open");
-                    card.classList.toggle("card--open", open);
-                    btn.textContent = open ? "Réduire" : "En savoir plus";
-                });
-            </script>
-</body>
-
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
 </html>

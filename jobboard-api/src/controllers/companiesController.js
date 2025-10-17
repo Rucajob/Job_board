@@ -1,40 +1,44 @@
-import pool from "../config/db.js";
+import Company from "../Model/Companies.js";
+import Job from "../Model/Jobs.js";
 
-// Obtenir toutes les entreprises
-export const getAllCompanies = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM companies");
-  res.json(rows);
+// Liste des entreprises
+export const listCompanies = async (req, res) => {
+  const companies = await Company.getAll();
+  res.render("companies/index", { companies });
 };
 
-// Obtenir une entreprise par ID
-export const getCompanyById = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM companies WHERE id = ?", [req.params.id]);
-  if (rows.length === 0) return res.status(404).json({ message: "Company not found" });
-  res.json(rows[0]);
+// Détail d'une entreprise
+export const showCompany = async (req, res) => {
+  const company = await Company.getById(req.params.id);
+  const jobs = await Job.getByCompanyId(req.params.id);
+  res.render("companies/show", { company, jobs });
+};
+
+// Formulaire d’ajout
+export const addCompanyForm = (req, res) => {
+  res.render("companies/add");
 };
 
 // Créer une entreprise
 export const createCompany = async (req, res) => {
-  const { name, website, email, phone } = req.body;
-  const [result] = await pool.query(
-    "INSERT INTO companies (name, website, email, phone) VALUES (?, ?, ?, ?)",
-    [name, website, email, phone]
-  );
-  res.status(201).json({ id: result.insertId, name, website, email, phone });
+  await Company.create(req.body);
+  res.redirect("/companies");
 };
 
-// Mettre à jour une entreprise
+// Modifier une entreprise
 export const updateCompany = async (req, res) => {
-  const { name, website, email, phone } = req.body;
-  await pool.query(
-    "UPDATE companies SET name=?, website=?, email=?, phone=? WHERE id=?",
-    [name, website, email, phone, req.params.id]
-  );
-  res.json({ message: "Company updated" });
+  await Company.update(req.params.id, req.body);
+  res.redirect("/companies");
 };
 
 // Supprimer une entreprise
 export const deleteCompany = async (req, res) => {
-  await pool.query("DELETE FROM companies WHERE id=?", [req.params.id]);
-  res.json({ message: "Company deleted" });
+  await Company.delete(req.params.id);
+  res.redirect("/companies");
+};
+
+// 🆕 Page publique : affichage des entreprises
+export const renderCompaniesPage = async (req, res) => {
+  const companies = await Company.getAll();
+  res.render("pages/companies", { companies });
 };

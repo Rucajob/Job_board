@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ruca — Admin</title>
+    <link rel="stylesheet" href="/css/admin.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__brand">RUCA</div>
+      <nav class="topbar__links">
+        <a href="/">accueil</a>
+        <a href="/logout">déconnexion</a>
+        <a href="/contact">contact</a>
+      </nav>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar__title">ADMIN</div>
+        <nav class="menu">
+          <a class="menu__item is-active" href="#"><span class="star">★</span> Tableau de bord</a>
+
+          <div class="menu__section">Profil admin</div>
+
+          <% admins.forEach(admin => { %>
+            <button class="accordion" data-acc>
+              <span class="square"></span><span class="name"><%= admin.name %></span>
+            </button>
+            <div class="panel" hidden>
+              <p><strong>Mail :</strong> <%= admin.email %></p>
+              <p><strong>Poste :</strong> <%= admin.role %></p>
+              <div class="actions-inline">
+                <button class="btn btn--ghost">modifier</button>
+                <button class="btn btn--ghost btn--danger">supprimer</button>
+              </div>
+            </div>
+          <% }) %>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <h1 class="page-title">Tableau de bord</h1>
+
+        <section class="kpis">
+          <div class="card kpi">
+            <div class="kpi__title">Messages</div>
+            <div class="kpi__value"><%= messages.length %></div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpi__title">Entreprises actives</div>
+            <div class="kpi__value"><%= companies.length %></div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpi__title">Candidats inscrits</div>
+            <div class="kpi__value"><%= candidates.length %></div>
+          </div>
+        </section>
+
+        <section class="block">
+          <header class="block__head">
+            <h2>Offres d’emploi</h2>
+          </header>
+
+          <div class="carousel">
+            <div class="rail">
+              <% jobs.forEach(job => { %>
+                <article class="card job">
+                  <div class="job__body">
+                    <h3 class="job__title"><%= job.title %></h3>
+                    <p class="job__line">
+                      <strong><%= job.company_name %></strong> • <%= job.location %> • <%= job.contract %>
+                    </p>
+                    <div class="actions-inline">
+                      <button class="btn btn--ghost">modifier</button>
+                      <button class="btn btn--ghost btn--danger">supprimer</button>
+                    </div>
+                  </div>
+                </article>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

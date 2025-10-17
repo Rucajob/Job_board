@@ -1,19 +1,24 @@
 import express from "express";
 import {
-  getAllUsers,
-  getUserById,
+  listUsers,
+  showUser,
+  addUserForm,
   createUser,
   updateUser,
-  deleteUser
-} from "../controllers/usersController.js";
+  deleteUser,
+  renderUserProfile
+} from "../Controllers/usersController.js";
 
 const router = express.Router();
 
-// Définition des routes
-router.get("/", getAllUsers);
-router.get("/:id", getUserById);
-router.post("/", createUser);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.get("/", listUsers);
+router.get("/add", addUserForm);
+router.post("/add", createUser);
+router.get("/edit/:id", showUser);
+router.post("/edit/:id", updateUser);
+router.get("/delete/:id", deleteUser);
+
+// 🔸 Profil utilisateur (après le reste)
+router.get("/:id/profile", renderUserProfile);
 
 export default router;

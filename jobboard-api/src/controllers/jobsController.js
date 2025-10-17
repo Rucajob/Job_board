@@ -35,7 +35,7 @@ export const deleteJob = async (req, res) => {
 export const renderJobsPage = async (req, res) => {
   try {
     const jobs = await Job.getAll();
-    res.render("pages/offers", { jobs });
+    res.render("pages/offers", { offers : jobs });
   } catch (error) {
     console.error("Erreur lors du rendu des jobs :", error);
     res.status(500).send("Erreur serveur");
@@ -49,6 +49,16 @@ export const renderJobDetails = async (req, res) => {
     res.render("pages/jobDetails", { job });
   } catch (error) {
     console.error(error);
+    res.status(500).send("Erreur serveur");
+  }
+};
+
+export const renderLandingPage = async (req, res) => {
+  try {
+    const offers = await Job.getAll(); // récupère toutes les offres
+    res.render("pages/landing", { offers }); // <-- passe "offers" à EJS
+  } catch (error) {
+    console.error("Erreur lors du rendu de la landing :", error);
     res.status(500).send("Erreur serveur");
   }
 };

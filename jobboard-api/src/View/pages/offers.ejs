@@ -1,90 +1,89 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <%- include('../partials/head', { title: 'Offres d’emploi – Ruca JobBoard' }) %>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Offres d’emploi – Ruca</title>
     <link rel="stylesheet" href="/css/offers.css" />
   </head>
-
   <body>
-    <!-- HEADER -->
     <header>
       <h1>Ruca – trouvez, connectez, réussissez</h1>
       <nav class="links" aria-label="Navigation principale">
-        <a href="/">Accueil</a>
-        <a href="/connexion">Mon compte</a>
-        <a href="#">Contact</a>
+        <a href="/">accueil</a>
+        <a href="/login">connexion</a>
+        <a href="/register">inscription</a>
+        <a href="/contact">contact</a>
       </nav>
     </header>
 
-    <img src="/images/fond.png" alt="couleur" />
+    <img src="/images/fond.png" alt="bannière" />
 
     <main>
-      <!-- BARRE DE RECHERCHE -->
       <div class="barre">
         <h5>Trouvez le job de vos rêves</h5>
         <div class="search">
-          <form action="/jobs" method="get">
-            <input
-              name="q"
-              placeholder="Intitulé du poste"
-              value="<%= typeof query !== 'undefined' ? query : '' %>"
-            />
-            <input name="location" placeholder="Localisation" />
-            <button class="btnrechercher" type="submit">Rechercher</button>
-          </form>
+          <input placeholder="intitulé du poste" />
+          <input placeholder="Localisation" />
+          <button class="btnrechercher">Rechercher</button>
         </div>
       </div>
 
-      <!-- SECTION OFFRES D’EMPLOI -->
       <section class="annonces">
         <h2 class="annonces__title">Offres d’emploi</h2>
 
         <div class="annonces__grid">
-          <% if (jobs && jobs.length > 0) { %>
-            <% jobs.forEach(job => { %>
+          <% if (offers && offers.length > 0) { %>
+            <% offers.forEach(offer => { %>
               <article class="card">
                 <div class="card__body">
-                  <h3 class="card__title"><%= job.company_name %></h3>
-                  <p class="card__desc"><%= job.title %></p>
-                  <p class="card__meta">📍 <%= job.location %></p>
+                  <h3 class="card__title"><%= offer.company_name %></h3>
+                  <p class="card__desc"><%= offer.title %></p>
+                  <p class="card__meta">📍 <%= offer.location %></p>
 
                   <div class="card__more">
-                    <%= job.description ? job.description.substring(0, 200) + '...' : 'Aucune description disponible.' %>
+                    <ul class="card__facts">
+                      <li>💶 <strong>Salaire :</strong> <%= offer.salary || "Non précisé" %></li>
+                      <li>🕒 <strong>Temps de travail :</strong> <%= offer.work_time || "35 h / semaine" %></li>
+                    </ul>
+                    <%= offer.description %>
                   </div>
 
-                  <a href="/jobs/details/<%= job.id %>" class="btn-ghost">En savoir plus</a>
+                  <div class="card__actions">
+                    <button class="btn-ghost" type="button">En savoir plus</button>
+                    <a class="btn-primary" href="/applications/apply/<%= offer.id %>">Candidater</a>
+                  </div>
                 </div>
               </article>
             <% }) %>
           <% } else { %>
-            <p>Aucune offre trouvée pour le moment.</p>
+            <p>Aucune offre disponible pour le moment.</p>
           <% } %>
         </div>
       </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-grid">
         <div class="footer-col">
           <h3>À propos</h3>
           <ul>
-            <li><a href="#">Qui sommes-nous</a></li>
-            <li><a href="#">Notre mission</a></li>
+            <li><a href="/about">Qui sommes-nous</a></li>
+            <li><a href="/mission">Notre mission</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3>Aide</h3>
           <ul>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Support</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/support">Support</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3>Légal</h3>
           <ul>
-            <li><a href="#">Mentions légales</a></li>
-            <li><a href="#">Politique de confidentialité</a></li>
+            <li><a href="/legal">Mentions légales</a></li>
+            <li><a href="/privacy">Politique de confidentialité</a></li>
           </ul>
         </div>
       </div>
@@ -94,7 +93,6 @@
     </footer>
 
     <script>
-      // Toggle "En savoir plus"
       document.addEventListener("click", (e) => {
         const btn = e.target.closest(".btn-ghost");
         if (!btn) return;
@@ -104,10 +102,7 @@
         btn.textContent = open ? "Réduire" : "En savoir plus";
       });
 
-      // Année dynamique
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
-
-    <%- include('../partials/footer') %>
   </body>
 </html>
