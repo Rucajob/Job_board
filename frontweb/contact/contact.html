@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RUCA — Contact</title>
+    <link rel="stylesheet" href="contact.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__brand">RUCA</div>
+      <nav class="topbar__links">
+        <a href="index01.html">accueil</a>
+        <a href="index02.html">home</a>
+        <a href="contact.html" class="active">contact</a>
+      </nav>
+    </header>
+
+    <main class="wrap">
+      <section class="card hero">
+        <div class="hero__head">
+          <h1>un problème, une solution — contactez-nous !</h1>
+          <p class="subtitle">
+            Nous répondons vite aux questions techniques et aux suggestions.
+          </p>
+        </div>
+
+        <form class="form" action="#" method="post">
+          <div class="row">
+            <div class="field">
+              <label for="prenom">Prénom</label>
+              <input
+                id="prenom"
+                name="prenom"
+                type="text"
+                placeholder="Votre prénom"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="nom">Nom</label>
+              <input
+                id="nom"
+                name="nom"
+                type="text"
+                placeholder="Votre nom"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="email">Adresse e-mail</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="exemple@ruca.test"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="sujet">Sujet</label>
+              <input
+                id="sujet"
+                name="sujet"
+                type="text"
+                placeholder="Sujet de votre message"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Votre message</label>
+            <textarea
+              id="message"
+              name="message"
+              placeholder="Expliquez votre demande…"
+              required
+            ></textarea>
+          </div>
+
+          <button class="btn" type="submit">Envoyer</button>
+        </form>
+      </section>
+
+      <section class="card info">
+        <h2>Nos contacts</h2>
+        <ul class="list">
+          <li>
+            <span class="dot"></span> Email :
+            <a href="mailto:support@ruca.test">support@ruca.test</a>
+          </li>
+          <li><span class="dot"></span> Téléphone : 01 23 45 67 89</li>
+          <li><span class="dot"></span> Adresse : 1 rue de Nice, 0600 Nice</li>
+          <li><span class="dot"></span> Horaires : Lun–Ven, 9h–18h</li>
+        </ul>
+
+        <div class="cols">
+          <div class="mini">
+            <h3>Equipe support</h3>
+            <p>
+              Lucas — Responsable <br />Hugo — Dev Web Back-end<br />Riyad — Dev
+              Web Front-end
+            </p>
+          </div>
+          <div class="mini">
+            <h3>Réseaux</h3>
+            <p>LinkedIn · GitHub · X/Twitter</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
