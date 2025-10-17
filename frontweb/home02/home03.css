@@ -265,3 +265,39 @@ h5 {
     grid-template-columns: 1fr;
   }
 }
+
+/* ====== AJOUTS ====== */
+
+/* Bouton orange réutilisable (même style que .btnrechercher) */
+.btn-primary {
+  padding: 10px 16px;
+  background: #ff6a00;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-decoration: none; /* pour <a> */
+  display: inline-block;
+}
+.btn-primary:hover { filter: brightness(0.95); }
+
+/* Liste des “faits” (salaire, heures) */
+.card__facts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #1f2937;
+}
+.card__facts li + li { margin-top: 4px; }
+
+/* Zone d’actions (boutons) */
+.card__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
