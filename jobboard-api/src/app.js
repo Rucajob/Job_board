@@ -10,10 +10,12 @@ import applicationsRoutes from "./routes/applicationsRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import industryRoutes from "./routes/industryRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import messagesRoutes from "./routes/messagesRoutes.js";
 
 
 import { renderLandingPage } from "./Controllers/jobsController.js";
 import { renderJobsPage } from "./Controllers/jobsController.js";
+import { sendMessage } from "./Controllers/messagesController.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -52,10 +54,9 @@ app.get("/landing", renderLandingPage);
 app.get("/contact", (req, res) => {
   res.render("pages/contact");
 });
-app.post("/contact", (req, res) => {
-  console.log(req.body);
-  res.render("pages/contact", { message: "Message envoyé avec succès !" });
-});
+app.get("/contact", (req, res) => res.render("pages/contact", { message: null }));
+app.post("/contact", sendMessage);
+
 
 app.use("/industry", industryRoutes);
 app.use("/jobs", jobsRoutes);
@@ -66,5 +67,6 @@ app.use("/api/companies", companiesRoutes);
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/applications", applicationsRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/messages", messagesRoutes);
 
 export default app;
